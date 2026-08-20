@@ -29,6 +29,20 @@ training:
     learning_rate: 0.001
     weight_decay: 0.0001
     seed: 42
+    
+    early_stopping:
+        enabled: true
+        patience: 5
+
+    checkpoint:
+        enabled: true
+        directory: "models/checkpoints"
+
+    num_workers: 0
+
+    gradient_clipping:
+        enabled: false
+        max_norm: 1.0
 
 inference:
     checkpoint_path: "models/checkpoints/best_model.pth"
