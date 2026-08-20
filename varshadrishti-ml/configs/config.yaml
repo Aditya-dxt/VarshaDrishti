@@ -1,0 +1,36 @@
+data:
+    dataset_id: "3RIMG_L1B_STD"
+    rainfall_dataset_id: "3RIMG_L2B_IMC"
+
+    sequence_length: null
+    image_size: null
+
+    channels: []
+
+    roi:
+        min_lat: null
+        max_lat: null
+        min_lon: null
+        max_lon: null
+
+preprocessing:
+    normalization: null
+    resize_method: null
+    missing_value_strategy: null
+
+model:
+    num_classes: 4
+    dropout: 0.3
+
+training:
+    batch_size: 4
+    epochs: 30
+    learning_rate: 0.001
+    weight_decay: 0.0001
+    seed: 42
+
+inference:
+    checkpoint_path: "models/checkpoints/best_model.pth"
+
+runtime:
+    device: "auto"

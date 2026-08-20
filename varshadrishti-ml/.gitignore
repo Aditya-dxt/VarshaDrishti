@@ -1,0 +1,22 @@
+# Environments
+venv/
+__pycache__/
+*.pyc
+.env
+*.env
+config.local.json
+
+# Data
+data/raw/
+data/interim/
+data/processed/
+
+# Models and Outputs
+models/checkpoints/
+outputs/
+*.pth
+
+# Satellite Files
+*.h5
+*.hdf5
+*.nc
