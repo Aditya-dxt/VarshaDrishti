@@ -1,0 +1,54 @@
+======================================================================
+VarshaDrishti — Preprocessing Dry Run
+======================================================================
+L1B: 3RIMG_17AUG2026_2345_L1B_STD_V01R00.h5
+L2B: 3RIMG_17AUG2026_2345_L2B_IMC_V01R00.h5
+
+--- Geolocation ---
+Common Grid Shape: (2816, 2805)
+Valid Geolocation: 72.94% of pixels
+Latitude Range:  -81.04 to 81.04 degrees
+Longitude Range: -7.15 to 155.15 degrees
+
+--- Calibrated Input Channels ---
+IMG_MIR:
+  Method      : LAB_STANDARD
+  Valid Px    : 72.95%
+  Radiance Min: 0.0955
+  Radiance Max: 0.2978
+  Radiance Avg: 0.2611
+IMG_TIR1:
+  Method      : LAB_STANDARD
+  Valid Px    : 72.95%
+  Radiance Min: 0.7520
+  Radiance Max: 1.2849
+  Radiance Avg: 0.9596
+IMG_TIR2:
+  Method      : LAB_STANDARD
+  Valid Px    : 72.95%
+  Radiance Min: 0.7300
+  Radiance Max: 1.1326
+  Radiance Avg: 0.8818
+
+--- Rainfall Target ---
+Valid Rainfall Px: 100.00%
+Rainfall Min     : 0.0000
+Rainfall Max     : 60.0000
+
+--- Global Data Mask ---
+Globally valid pixels (all data present): 72.92%
+
+--- Patch Generation (Dry Run) ---
+Patch Size: 256x256
+Stride:     256
+Min Valid:  90.0%
+Candidate Patches Generated: 69
+No-rain dominated patches : 51 (73.9%)
+Rainy patches (>5% rain)  : 18 (26.1%)
+Patches with Heavy+ rain  : 21 (30.4%)
+
+--- ML Data Split Warning ---
+WARNING: Only one temporal observation is currently available;
+additional timestamps are required for a meaningful ML train/validation/test split.
+
+DRY RUN COMPLETE. No data was written to disk.

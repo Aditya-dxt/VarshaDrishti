@@ -1,0 +1,36 @@
+data:
+  l1b_path: "data/raw/insat3dr_l1b/3RIMG_17AUG2026_2345_L1B_STD_V01R00.h5"
+  l2b_path: "data/raw/insat3dr_l2b/3RIMG_17AUG2026_2345_L2B_IMC_V01R00.h5"
+  output_dir: "data/processed"
+  
+  channels:
+    - "IMG_MIR"
+    - "IMG_TIR1"
+    - "IMG_TIR2"
+    
+  l1b_fill_value: 1023
+  l2b_fill_value: -999.0
+  geo_fill_value: 32767
+  geo_scale_factor: 0.01
+
+patching:
+  size: 256
+  stride: 256
+  min_valid_pixels_pct: 90.0
+
+rainfall_classes:
+  no_rain: 0.0
+  light: 1.0
+  moderate: 5.0
+  heavy: 20.0
+  high_impact: 50.0
+
+calibration:
+  method: "standard_quadratic" # Options: standard_quadratic, gsics
+  
+normalization:
+  strategy: "standard_scaling" # to be used later
+
+sampling:
+  oversample_heavy: true
+  min_heavy_pixels_for_patch: 10

@@ -1,0 +1,441 @@
+========================================================================
+VarshaDrishti — Real INSAT-3DR Data Inspection Report
+Generated: 2026-08-20T14:31:09Z UTC
+========================================================================
+Both HDF5 files found. Proceeding with inspection.
+
+========================================================================
+SECTION 1 — L1B INSAT-3DR IMAGER CHANNELS
+File: 3RIMG_17AUG2026_2345_L1B_STD_V01R00.h5
+========================================================================
+Root-level attributes:
+  Acquisition_Date: b'17AUG2026'
+  Acquisition_End_Time: b'18-AUG-2026T00:12:24'
+  Acquisition_Start_Time: b'17-AUG-2026T23:45:30'
+  Acquisition_Time_in_GMT: b'2345'
+  Attitude_Source: b'STAR'
+  Datum: b'WGS84'
+  Ellipsoid: b'WGS84'
+  FastScan_Linearity_Enabled: b'no'
+  Field_of_View(degrees): [17.989905]
+  Ground_Station: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  HDF_Product_File_Name: b'3RIMG_17AUG2026_2345_L1B_STD_V01R00.h5'
+  Imaging_Mode: b'FULL FRAME'
+  MCD_FS_Enabled: b'no'
+  MCD_SS_Enabled: b'yes'
+  MIR_Acquisition_Mode: b'MAIN'
+  MIR_Gain_Mode: [2]
+  Nominal_Altitude(km): [36000.]
+  Nominal_Central_Point_Coordinates(degrees)_Latitude_Longitude: [ 0. 74.]
+  Observed_Altitude(km): [35817.071299]
+  Output_Format: b'hdf5-1.8.8'
+  Processing_Level: b'L1B'
+  Product_Creation_Time: b'2026-08-18T05:46:52'
+  Product_Type: b'STANDARD (FULL DISK)'
+  Radiometric_Calibration_Type: b'LAB CALIBRATED'
+  SWIR_Acquisition_Mode: b'MAIN'
+  SWIR_Gain_Mode: [2]
+  Sat_Azimuth(Degrees): [128.46785]
+  Sat_Elevation(Degrees): [89.838036]
+  Satellite_Name: b'INSAT-3DR'
+  Sensor_Id: b'IMG'
+  Sensor_Name: b'IMAGER'
+  SlowScan_Linearity_Enabled: b'no'
+  Software_Version: b'1.0'
+  Station_Id: b'BES'
+  Sun_Azimuth(Degrees): [76.205536]
+  Sun_Elevation(Degrees): [-17.159977]
+  TIR1_Acquisition_Mode: b'MAIN'
+  TIR1_Gain_Mode: [2]
+  TIR2_Acquisition_Mode: b'MAIN'
+  TIR2_Gain_Mode: [2]
+  Unique_Id: b'3RIMG_17AUG2026_2345'
+  VIS_Acquisition_Mode: b'MAIN'
+  VIS_Gain_Mode: [2]
+  WV_Acquisition_Mode: b'MAIN'
+  WV_Gain_Mode: [2]
+  Yaw_Flip_Flag: b'Y'
+  conventions: b'CF-1.6'
+  institute: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  left_longitude: [-7.1567035]
+  lower_latitude: [-81.04153]
+  right_longitude: [155.15671]
+  source: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  title: b'3RIMG_17AUG2026_2345_L1B'
+  upper_latitude: [81.04153]
+
+L1B Time: 14005425.00 minutes since 2000-01-01 -> 2026-08-17 23:45 UTC
+
+------------------------------------------------------------------------
+Channel: IMG_VIS
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [0]
+    bandwidth: [0.25]
+    bits_per_pixel: [10]
+    central_wavelength: [0.65]
+    coordinates: b'time Latitude_VIS Longitude_VIS'
+    invert: b'false'
+    lab_radiance_add_offset: [-3.81385]
+    lab_radiance_add_offset_gsics: [-3.81385]
+    lab_radiance_quad: [0.]
+    lab_radiance_quad_gsics: [0.]
+    lab_radiance_scale_factor: [0.0884703]
+    lab_radiance_scale_factor_gsics: [0.0884703]
+    long_name: b'Visible Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [1.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (11264, 11220)
+  Dtype        : uint16
+  Fill Value   : [0]
+  Total pixels : 126,382,080
+  Invalid px   : 34,205,827  (27.065%)
+  Valid px     : 92,176,253
+  Raw min      : 11.0
+  Raw max      : 1023.0
+  Mean         : 54.3923
+  Std dev      : 45.3876
+
+------------------------------------------------------------------------
+Channel: IMG_SWIR
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [0]
+    bandwidth: [0.15]
+    bits_per_pixel: [10]
+    central_wavelength: [1.625]
+    coordinates: b'time Latitude_VIS Longitude_VIS'
+    invert: b'false'
+    lab_radiance_add_offset: [-0.197532]
+    lab_radiance_add_offset_gsics: [-0.197532]
+    lab_radiance_quad: [0.]
+    lab_radiance_quad_gsics: [0.]
+    lab_radiance_scale_factor: [0.0081302]
+    lab_radiance_scale_factor_gsics: [0.0081302]
+    long_name: b'Shortwave Infrared Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [1.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (11264, 11220)
+  Dtype        : uint16
+  Fill Value   : [0]
+  Total pixels : 126,382,080
+  Invalid px   : 34,206,332  (27.066%)
+  Valid px     : 92,175,748
+  Raw min      : 1.0
+  Raw max      : 1023.0
+  Mean         : 50.9698
+  Std dev      : 69.4873
+
+------------------------------------------------------------------------
+Channel: IMG_MIR
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [1023]
+    bandwidth: [0.2]
+    bits_per_pixel: [10]
+    central_wavelength: [3.907]
+    coordinates: b'time Latitude Longitude'
+    invert: b'true'
+    lab_radiance_add_offset: [-0.00455556]
+    lab_radiance_add_offset_gsics: [-0.0136161]
+    lab_radiance_quad: [-2.00028e-12]
+    lab_radiance_quad_gsics: [-2.32248e-12]
+    lab_radiance_scale_factor: [0.00029788]
+    lab_radiance_scale_factor_gsics: [0.00034586]
+    long_name: b'Middle Infrared Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [4.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (2816, 2805)
+  Dtype        : uint16
+  Fill Value   : [1023]
+  Total pixels : 7,898,880
+  Invalid px   : 2,136,609  (27.050%)
+  Valid px     : 5,762,271
+  Raw min      : 336.0
+  Raw max      : 1015.0
+  Mean         : 891.6945
+  Std dev      : 50.7618
+
+------------------------------------------------------------------------
+Channel: IMG_TIR1
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [1023]
+    bandwidth: [1.]
+    bits_per_pixel: [10]
+    central_wavelength: [10.785]
+    coordinates: b'time Latitude Longitude'
+    invert: b'true'
+    lab_radiance_add_offset: [-0.0129651]
+    lab_radiance_add_offset_gsics: [-0.20539]
+    lab_radiance_quad: [-4.23297e-07]
+    lab_radiance_quad_gsics: [-6.33107e-07]
+    lab_radiance_scale_factor: [0.00174951]
+    lab_radiance_scale_factor_gsics: [0.00261667]
+    long_name: b'Thermal Infrared1 Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [4.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (2816, 2805)
+  Dtype        : uint16
+  Fill Value   : [1023]
+  Total pixels : 7,898,880
+  Invalid px   : 2,136,609  (27.050%)
+  Valid px     : 5,762,271
+  Raw min      : 497.0
+  Raw max      : 969.0
+  Mean         : 664.8527
+  Std dev      : 90.3719
+
+------------------------------------------------------------------------
+Channel: IMG_TIR2
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [1023]
+    bandwidth: [1.]
+    bits_per_pixel: [10]
+    central_wavelength: [11.966]
+    coordinates: b'time Latitude Longitude'
+    invert: b'true'
+    lab_radiance_add_offset: [-0.0101496]
+    lab_radiance_add_offset_gsics: [-0.186609]
+    lab_radiance_quad: [-4.33804e-07]
+    lab_radiance_quad_gsics: [-6.96453e-07]
+    lab_radiance_scale_factor: [0.00159652]
+    lab_radiance_scale_factor_gsics: [0.00256314]
+    long_name: b'Thermal Infrared2 Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [4.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (2816, 2805)
+  Dtype        : uint16
+  Fill Value   : [1023]
+  Total pixels : 7,898,880
+  Invalid px   : 2,136,609  (27.050%)
+  Valid px     : 5,762,271
+  Raw min      : 544.0
+  Raw max      : 973.0
+  Mean         : 689.5738
+  Std dev      : 78.6251
+
+------------------------------------------------------------------------
+Channel: IMG_WV
+  Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [1023]
+    bandwidth: [0.6]
+    bits_per_pixel: [10]
+    central_wavelength: [6.866]
+    coordinates: b'time Latitude_WV Longitude_WV'
+    invert: b'true'
+    lab_radiance_add_offset: [-0.00995216]
+    lab_radiance_add_offset_gsics: [-0.0352561]
+    lab_radiance_quad: [-2.06407e-07]
+    lab_radiance_quad_gsics: [-2.73136e-07]
+    lab_radiance_scale_factor: [0.00119032]
+    lab_radiance_scale_factor_gsics: [0.00157513]
+    long_name: b'Water Vapor Count'
+    radiance_units: b'mW.cm-2.sr-1.micron-1'
+    resolution: [8.]
+    resolution_unit: b'km'
+    wavelength_unit: b'micron'
+  Shape        : (1408, 1402)
+  Dtype        : uint16
+  Fill Value   : [1023]
+  Total pixels : 1,974,016
+  Invalid px   : 533,040  (27.003%)
+  Valid px     : 1,440,976
+  Raw min      : 806.0
+  Raw max      : 996.0
+  Mean         : 903.3452
+  Std dev      : 34.1092
+
+------------------------------------------------------------------------
+L1B Geolocation Grids:
+  Latitude:
+    Shape       : (2816, 2805)
+    Dtype       : int16
+    Min         : -8104.0000
+    Max         : 32767.0000
+    Finite px   : 7,898,880
+    Invalid px  : 0
+
+  Latitude_VIS:
+    Shape       : (11264, 11220)
+    Dtype       : int32
+    Min         : -81224.0000
+    Max         : 327670.0000
+    Finite px   : 126,382,080
+    Invalid px  : 0
+
+  Latitude_WV:
+    Shape       : (1408, 1402)
+    Dtype       : int16
+    Min         : -8088.0000
+    Max         : 32767.0000
+    Finite px   : 1,974,016
+    Invalid px  : 0
+
+  Longitude:
+    Shape       : (2816, 2805)
+    Dtype       : int16
+    Min         : -715.0000
+    Max         : 32767.0000
+    Finite px   : 7,898,880
+    Invalid px  : 0
+
+  Longitude_VIS:
+    Shape       : (11264, 11220)
+    Dtype       : int32
+    Min         : -7220.0000
+    Max         : 327670.0000
+    Finite px   : 126,382,080
+    Invalid px  : 0
+
+  Longitude_WV:
+    Shape       : (1408, 1402)
+    Dtype       : int16
+    Min         : -692.0000
+    Max         : 32767.0000
+    Finite px   : 1,974,016
+    Invalid px  : 0
+
+========================================================================
+SECTION 2 — L2B IMC RAINFALL TARGET
+File: 3RIMG_17AUG2026_2345_L2B_IMC_V01R00.h5
+========================================================================
+Root-level attributes:
+  Acquisition_Date: b'17AUG2026'
+  Acquisition_End_Time: b'18-AUG-2026T00:12:24'
+  Acquisition_Start_Time: b'17-AUG-2026T23:45:30'
+  Acquisition_Time_in_GMT: b'2345'
+  Ground_Station: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  HDF_Product_File_Name: b'3RIMG_17AUG2026_2345_L2B_IMC_V01R00.h5'
+  Nominal_Altitude(km): [36000.]
+  Nominal_Central_Point_Coordinates(degrees)_Latitude_Longitude: [ 0. 74.]
+  Output_Format: b'hdf5-1.8.8'
+  Processing_Level: b'L2B'
+  Product_Creation_Time: b'2026-08-18T06:16:57'
+  Product_Type: b'GEOPHY'
+  Satellite_Name: b'INSAT-3DR'
+  Sensor_Id: b'IMG'
+  Sensor_Name: b'IMAGER'
+  Software_Version: b'1.0'
+  Station_Id: b'BES'
+  Unique_Id: b'3RIMG_17AUG2026_2345'
+  conventions: b'CF-1.6'
+  institute: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  left_longitude: [-7.1567035]
+  lower_latitude: [-81.04153]
+  right_longitude: [155.15671]
+  source: b'BES,SAC/ISRO,Ahmedabad,INDIA.'
+  title: b'3RIMG_17AUG2026_2345_L2B'
+  upper_latitude: [81.04153]
+
+L2B Time: 14005425.00 minutes since 2000-01-01 -> 2026-08-17 23:45 UTC
+
+All datasets/groups in L2B file:
+  [Dataset] GeoX  shape=(2805,)  dtype=int32
+  [Dataset] GeoY  shape=(2816,)  dtype=int32
+  [Dataset] IMC  shape=(1, 2816, 2805)  dtype=float32
+  [Dataset] Latitude  shape=(2816, 2805)  dtype=int16
+  [Dataset] Longitude  shape=(2816, 2805)  dtype=int16
+  [Dataset] time  shape=(1,)  dtype=float64
+
+------------------------------------------------------------------------
+Rainfall Dataset: IMC
+  IMC Attributes:
+    DIMENSION_LIST: [array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)
+ array([<HDF5 object reference>], dtype=object)]
+    _FillValue: [-999.]
+    coordinates: b'time Latitude Longitude'
+    long_name: b'IMSRA (Improved)'
+    standard_name: b'Precipitation'
+    units: b'mm/hr'
+  Shape            : (2816, 2805)
+  Dtype            : float32
+  Total pixels     : 7,898,880
+  Invalid (fill)   : 0
+  Valid pixels     : 7,898,880  (100.00%)
+  Min (excl. fill) : 0.0000 mm/hr
+  Max (excl. fill) : 60.0000 mm/hr
+  Mean (valid)     : 0.1040 mm/hr
+  Std  (valid)     : 1.7240 mm/hr
+
+  Percentiles (valid pixels, mm/hr):
+       50th : 0.0000
+       75th : 0.0000
+       90th : 0.0000
+       95th : 0.0000
+       99th : 1.1794
+     99.9th : 23.4098
+
+  Rainfall intensity distribution (valid pixels):
+    == 0 (no rain)         :  7,593,082  (96.13%)
+    >0 and <=1             :    218,488  (2.77%)
+    >1 and <=5             :     54,889  (0.69%)
+    >5 and <=10            :     13,034  (0.17%)
+    >10 and <=20           :     10,082  (0.13%)
+    >20 and <=50           :      4,832  (0.06%)
+    >50                    :      4,473  (0.06%)
+
+------------------------------------------------------------------------
+L2B Geolocation Grids:
+  Latitude:
+    Shape       : (2816, 2805)
+    Dtype       : int16
+    Min         : -8104.0000
+    Max         : 32767.0000
+    Finite px   : 7,898,880
+    Invalid px  : 0
+
+  Longitude:
+    Shape       : (2816, 2805)
+    Dtype       : int16
+    Min         : -715.0000
+    Max         : 32767.0000
+    Finite px   : 7,898,880
+    Invalid px  : 0
+
+========================================================================
+SECTION 3 — SPATIAL COMPATIBILITY CHECK (L1B 4-km vs L2B)
+========================================================================
+L1B lat grid (Latitude):
+  Shape: (2816, 2805)  Min: -8104.0000  Max: 32767.0000
+L2B lat grid (Latitude):
+  Shape: (2816, 2805)  Min: -8104.0000  Max: 32767.0000
+Shapes identical   : True
+Lat range similar  : True
+
+========================================================================
+SECTION 4 — TEMPORAL PROXIMITY CHECK
+========================================================================
+L1B observation : 2026-08-17 23:45 UTC
+L2B observation : 2026-08-17 23:45 UTC
+Time difference : 0.0 minutes
+RESULT: Temporally compatible (within 30-minute tolerance).
+
+========================================================================
+INSPECTION COMPLETE
+========================================================================
