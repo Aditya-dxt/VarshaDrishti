@@ -19,6 +19,7 @@ preprocessing:
     missing_value_strategy: null
 
 model:
+    in_channels: null
     num_classes: 4
     dropout: 0.3
 
