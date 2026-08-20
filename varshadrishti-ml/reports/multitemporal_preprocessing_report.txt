@@ -1,0 +1,4 @@
+
+Artifact written to: C:\Users\adity\OneDrive\Desktop\VarshaDrishti\varshadrishti-ml\data\processed\multitemporal_dev
+Sequences shape   : [69, 3, 6, 256, 256]
+Patches           : 69

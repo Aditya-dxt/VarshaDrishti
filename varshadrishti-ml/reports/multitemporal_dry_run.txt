@@ -1,0 +1,44 @@
+======================================================================
+VarshaDrishti -- Multi-Temporal Preprocessing DRY RUN
+======================================================================
+Timestamps        : 6
+Sequence Length   : 6
+Temporal Step     : 30 min
+Channels          : ['IMG_MIR', 'IMG_TIR1', 'IMG_TIR2']
+Patch Size        : 256x256
+Stride            : 256
+Min Valid Pixels  : 90.0%
+
+  2026-08-17T21:15:00  L1B=3RIMG_17AUG2026_2115_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2115_L2B_IMC_V01R00.h5
+  2026-08-17T21:45:00  L1B=3RIMG_17AUG2026_2145_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2145_L2B_IMC_V01R00.h5
+  2026-08-17T22:15:00  L1B=3RIMG_17AUG2026_2215_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2215_L2B_IMC_V01R00.h5
+  2026-08-17T22:45:00  L1B=3RIMG_17AUG2026_2245_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2245_L2B_IMC_V01R00.h5
+  2026-08-17T23:15:00  L1B=3RIMG_17AUG2026_2315_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2315_L2B_IMC_V01R00.h5
+  2026-08-17T23:45:00  L1B=3RIMG_17AUG2026_2345_L1B_STD_V01R00.h5  L2B=3RIMG_17AUG2026_2345_L2B_IMC_V01R00.h5
+
+--- Computing Intersection Validity Mask ---
+Common Grid Shape       : (2816, 2805)
+Intersection Valid Px   : 5,755,761 (72.87%)
+
+--- Candidate Patches ---
+Candidate patches (intersection mask, min 90.0% valid): 69
+
+--- Rainfall Statistics (Final Timestamp) ---
+Valid Rain Pixels : 5,755,761
+Min               : 0.0000 mm/hr
+Max               : 60.0000 mm/hr
+Mean              : 0.1427 mm/hr
+Std               : 2.0183 mm/hr
+
+--- Patch Rainfall Classes (Final Timestamp) ---
+No-rain dominated (>95%): 51 (73.9%)
+Rainy (>5% rain)        : 18 (26.1%)
+Heavy+ rain patches     : 21 (30.4%)
+
+--- Expected Output ---
+sequences.npy shape : [69, 3, 6, 256, 256]
+targets.npy shape   : [69, 256, 256]
+labels.npy shape    : [69]
+Estimated disk usage: 310.5 MB
+
+DRY RUN COMPLETE -- No data written.
