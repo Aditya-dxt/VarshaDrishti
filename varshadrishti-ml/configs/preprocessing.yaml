@@ -18,6 +18,11 @@ patching:
   stride: 256
   min_valid_pixels_pct: 90.0
 
+sequencing:
+  sequence_length: 6
+  temporal_step_minutes: 30
+  tolerance_minutes: 0
+
 rainfall_classes:
   no_rain: 0.0
   light: 1.0

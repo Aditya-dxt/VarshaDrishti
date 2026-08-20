@@ -1,0 +1,15 @@
+==================================================
+TEMPORAL DATASET VALIDATION
+==================================================
+L1B observations: 1
+L2B observations: 1
+Matched observations: 1
+Unmatched L1B files: 0
+Unmatched L2B files: 0
+Timestamp gaps (broken continuity): N/A
+Longest continuous sequence (frames): 1
+6-frame sequences: 0
+Training ready: FALSE
+
+INSUFFICIENT TEMPORAL DATA — TRAINING NOT READY
+Waiting for more consecutive real data timestamps.
