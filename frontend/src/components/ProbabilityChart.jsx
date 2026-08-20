@@ -1,11 +1,8 @@
 /**
- * ProbabilityChart.jsx
- * Clean pure-CSS horizontal bar chart. No Recharts dependency.
+ * ProbabilityChart.jsx — Light theme
+ * Clean pure-CSS horizontal bar chart.
  * Semantic color only on the highest-risk class.
- * All other classes remain neutral.
- *
- * Props:
- *   probabilities — { no_rain, moderate, heavy, high_impact } (0–1 values)
+ * Other classes use a neutral light gray bar.
  */
 import { getRiskMeta } from '../utils/riskHelpers.js';
 
@@ -21,15 +18,14 @@ export default function ProbabilityChart({ probabilities }) {
     meta: getRiskMeta(key),
   }));
 
-  // Find the highest probability class to highlight
   const maxKey = data.reduce((a, b) => (b.value > a.value ? b : a)).key;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {data.map(({ key, label, value, meta }) => {
         const pct = (value * 100).toFixed(1);
         const isMax = key === maxKey;
-        const barColor = isMax ? meta.dotColor : 'rgba(255,255,255,0.08)';
+        const barColor = isMax ? meta.dotColor : '#CBD5E1';
         const labelColor = isMax ? meta.dotColor : 'var(--text-secondary)';
         const pctColor = isMax ? 'var(--text-primary)' : 'var(--text-muted)';
 
@@ -48,7 +44,7 @@ export default function ProbabilityChart({ probabilities }) {
                 style={{
                   fontSize: '12px',
                   color: labelColor,
-                  fontWeight: isMax ? 500 : 400,
+                  fontWeight: isMax ? 600 : 400,
                   transition: 'color 0.2s',
                 }}
               >
@@ -59,7 +55,7 @@ export default function ProbabilityChart({ probabilities }) {
                   fontFamily: 'var(--font-mono)',
                   fontSize: '12px',
                   color: pctColor,
-                  fontWeight: isMax ? 600 : 400,
+                  fontWeight: isMax ? 700 : 400,
                   letterSpacing: '0.02em',
                 }}
               >
@@ -69,8 +65,8 @@ export default function ProbabilityChart({ probabilities }) {
             {/* Bar track */}
             <div
               style={{
-                height: '3px',
-                background: 'var(--bg-overlay)',
+                height: '4px',
+                background: '#F1F5F9',
                 width: '100%',
                 borderRadius: 0,
               }}
@@ -80,7 +76,7 @@ export default function ProbabilityChart({ probabilities }) {
                   height: '100%',
                   width: `${value * 100}%`,
                   background: barColor,
-                  transition: 'width 0.5s ease, background 0.3s',
+                  transition: 'width 0.5s ease',
                 }}
               />
             </div>

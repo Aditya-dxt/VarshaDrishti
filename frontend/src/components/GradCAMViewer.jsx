@@ -1,22 +1,21 @@
 /**
- * GradCAMViewer.jsx
- * Used on the Historical page. Flat tab strip, no rounded containers.
- * Same three modes: Original | Heatmap | Overlay
+ * GradCAMViewer.jsx — Light theme
+ * Historical page Grad-CAM viewer. Same three modes as EvidenceViewer.
  */
 import { useState } from 'react';
 import LoadingState from './LoadingState.jsx';
 import EmptyState   from './EmptyState.jsx';
 
 const MODES = [
-  { id: 'original', label: 'Satellite',  key: 'original_url' },
-  { id: 'heatmap',  label: 'Grad-CAM',   key: 'heatmap_url'  },
-  { id: 'overlay',  label: 'Overlay',    key: 'overlay_url'  },
+  { id: 'original', label: 'Raw Satellite', key: 'original_url' },
+  { id: 'heatmap',  label: 'Grad-CAM',      key: 'heatmap_url'  },
+  { id: 'overlay',  label: 'Overlay',        key: 'overlay_url'  },
 ];
 
 const CAPTIONS = {
   original: 'Original INSAT-3DR observation used as model input.',
   heatmap:  'Regions of highest model attention. Warmer colour = stronger influence.',
-  overlay:  'Grad-CAM attention overlaid on the satellite image.',
+  overlay:  'Grad-CAM attention overlaid on the satellite image (α = 0.55).',
 };
 
 export default function GradCAMViewer({ gradcam, loading }) {
@@ -43,7 +42,13 @@ export default function GradCAMViewer({ gradcam, loading }) {
       <div
         role="tablist"
         aria-label="Evidence mode"
-        style={{ display: 'flex', borderBottom: '1px solid var(--border)', marginBottom: 0 }}
+        style={{
+          display: 'flex',
+          borderBottom: '1px solid var(--border)',
+          marginBottom: 0,
+          background: 'var(--bg-surface)',
+          paddingLeft: '4px',
+        }}
       >
         {MODES.map(({ id, label }) => (
           <button
@@ -58,17 +63,17 @@ export default function GradCAMViewer({ gradcam, loading }) {
         ))}
       </div>
 
-      {/* Image */}
+      {/* Image panel — dark background for satellite imagery */}
       <div
         role="tabpanel"
-        style={{ position: 'relative', background: '#040b14', lineHeight: 0 }}
+        style={{ position: 'relative', background: '#1a2332', lineHeight: 0 }}
       >
         {imgUrl && !imgError ? (
           <img
             key={mode}
             src={imgUrl}
             alt={CAPTIONS[mode]}
-            style={{ width: '100%', maxHeight: 300, objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', maxHeight: 300, objectFit: 'contain', display: 'block' }}
             onError={() => setImgError(true)}
           />
         ) : (
@@ -78,7 +83,7 @@ export default function GradCAMViewer({ gradcam, loading }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--text-muted)',
+              color: '#94A3B8',
               fontSize: '12px',
             }}
           >
@@ -92,10 +97,11 @@ export default function GradCAMViewer({ gradcam, loading }) {
         style={{
           fontSize: '11px',
           color: 'var(--text-muted)',
-          lineHeight: 1.5,
+          lineHeight: 1.55,
           padding: '8px 0 0',
           borderTop: '1px solid var(--border)',
           marginTop: 0,
+          background: 'var(--bg-raised)',
         }}
       >
         {CAPTIONS[mode]}

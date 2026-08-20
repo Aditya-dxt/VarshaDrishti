@@ -1,6 +1,5 @@
 /**
- * DataStatus.jsx
- * Plain text data freshness status. No icons.
+ * DataStatus.jsx — Light theme. Data freshness indicator.
  */
 import { formatTimestamp } from '../utils/riskHelpers.js';
 
@@ -11,12 +10,12 @@ export default function DataStatus({ system }) {
 
   return (
     <span
-      style={{ fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '0.04em' }}
+      style={{ fontSize: '12px', color: 'var(--text-muted)', letterSpacing: '0.02em' }}
       aria-label="Data freshness"
     >
       {isWaiting
         ? 'Awaiting satellite data'
-        : <>Last observation · <span style={{ color: 'var(--text-secondary)' }}>{formatTimestamp(last_data_at)}</span></>}
+        : <>Last observation · <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{formatTimestamp(last_data_at)}</span></>}
     </span>
   );
 }

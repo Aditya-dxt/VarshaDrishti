@@ -1,13 +1,10 @@
 /**
- * PageHeader.jsx — Reusable page header component
- *
- * Sticky page header with breadcrumb, optional subtitle, and right slot.
- * Consistent across all three pages.
+ * PageHeader.jsx — Reusable sticky page header (light theme)
  *
  * Props:
- *   page    — current page name string
- *   sub     — subtitle / status line (node or string)
- *   right   — right-side slot (node)
+ *   page  — current page name string
+ *   sub   — subtitle / status line (node or string)
+ *   right — right-side slot (node)
  */
 export default function PageHeader({ page, sub, right }) {
   return (
@@ -26,26 +23,27 @@ export default function PageHeader({ page, sub, right }) {
             style={{
               fontSize: '11px',
               color: 'var(--text-dim)',
-              fontWeight: 500,
-              letterSpacing: '0.05em',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
               textTransform: 'uppercase',
             }}
           >
             BHOOMIDRISHTI
           </span>
-          <span style={{ color: 'var(--text-dim)', fontSize: '11px' }}>/</span>
+          <span style={{ color: 'var(--text-dim)', fontSize: '12px' }}>/</span>
           <span
             style={{
               fontSize: '11px',
               color: 'var(--text-muted)',
-              fontWeight: 500,
-              letterSpacing: '0.05em',
+              fontWeight: 600,
+              letterSpacing: '0.06em',
               textTransform: 'uppercase',
             }}
           >
             {page}
           </span>
         </div>
+
         {/* Subtitle */}
         {sub && (
           <div

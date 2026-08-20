@@ -1,5 +1,5 @@
 /**
- * ErrorState.jsx — flat error state. No icon circle, no coloured background.
+ * ErrorState.jsx — Light theme. Clean error presentation.
  */
 import { RefreshCw } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export default function ErrorState({ message, onRetry }) {
       }}
       role="alert"
     >
-      <p style={{ color: 'var(--text-primary)', fontWeight: 500, margin: '0 0 6px' }}>
+      <p style={{ color: 'var(--text-primary)', fontWeight: 600, margin: '0 0 6px', fontSize: '14px' }}>
         Unable to load data
       </p>
       <p style={{ color: 'var(--text-muted)', fontSize: '12px', maxWidth: 320, lineHeight: 1.6, margin: '0 0 20px' }}>
@@ -26,20 +26,10 @@ export default function ErrorState({ message, onRetry }) {
       {onRetry && (
         <button
           onClick={onRetry}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '8px 20px',
-            background: 'transparent',
-            border: '1px solid var(--risk-impact)',
-            color: 'var(--risk-impact)',
-            fontSize: '12px',
-            letterSpacing: '0.05em',
-            cursor: 'pointer',
-          }}
+          className="btn"
+          style={{ borderColor: 'var(--risk-impact)', color: 'var(--risk-impact)' }}
         >
-          <RefreshCw size={12} />
+          <RefreshCw size={11} />
           Retry
         </button>
       )}

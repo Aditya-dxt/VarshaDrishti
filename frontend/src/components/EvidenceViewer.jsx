@@ -1,19 +1,7 @@
 /**
- * EvidenceViewer.jsx
- * Unified satellite evidence panel: Satellite | Grad-CAM | Overlay
- * Single tabbed viewer. Tabs use bottom-border active state.
- * Section header above tabs. Smooth opacity transition between views.
- *
- * Props:
- *   gradcam     — gradcam data object from API
- *   metadata    — prediction metadata (timestamp, channel_label)
- *   loading     — boolean
- *
- * Contract:
- *   gradcam.original_url — satellite image
- *   gradcam.heatmap_url  — Grad-CAM heatmap
- *   gradcam.overlay_url  — heatmap overlaid on satellite
- *   gradcam.available    — boolean
+ * EvidenceViewer.jsx — Light theme
+ * Unified satellite evidence panel with tabs: Satellite | Grad-CAM | Overlay
+ * Clean white surface, dark tab labels, blue active state.
  */
 import { useState } from 'react';
 import LoadingState from './LoadingState.jsx';
@@ -22,9 +10,9 @@ import EmptyState from './EmptyState.jsx';
 const MODES = [
   {
     id:    'original',
-    label: 'Satellite',
+    label: 'Raw Satellite',
     key:   'original_url',
-    desc:  'Original INSAT-3DR observation. Displayed as ingested by the 3D-CNN — no post-processing.',
+    desc:  'Original INSAT-3DR observation as ingested by the 3D-CNN — no post-processing.',
     note:  null,
     showScale: false,
   },
@@ -40,7 +28,7 @@ const MODES = [
     id:    'overlay',
     label: 'Overlay',
     key:   'overlay_url',
-    desc:  'Grad-CAM attention superimposed on the original satellite observation (α = 0.55).',
+    desc:  'Grad-CAM attention superimposed on original satellite observation (α = 0.55).',
     note:  'Warmer colour = stronger model attention.',
     showScale: true,
   },
@@ -51,12 +39,12 @@ function GradCAMScale() {
   return (
     <div
       style={{
-        padding: '7px 16px',
+        padding: '6px 16px',
         borderBottom: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         gap: '4px',
-        background: 'var(--bg-surface)',
+        background: 'var(--bg-raised)',
       }}
     >
       <div
@@ -66,10 +54,10 @@ function GradCAMScale() {
           marginBottom: '3px',
         }}
       >
-        <span style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
           Low attention
         </span>
-        <span style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600 }}>
           High attention
         </span>
       </div>
@@ -85,7 +73,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
 
   if (loading) {
     return (
-      <div style={{ padding: '32px 0' }}>
+      <div style={{ padding: '32px 28px' }}>
         <LoadingState label="Loading satellite evidence…" lines={5} />
       </div>
     );
@@ -122,7 +110,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
           display: 'flex',
           background: 'var(--bg-surface)',
           borderBottom: '1px solid var(--border)',
-          paddingLeft: '4px',
+          paddingLeft: '8px',
         }}
       >
         {MODES.map(({ id, label }) => (
@@ -146,9 +134,9 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         role="tabpanel"
         style={{
           position: 'relative',
-          background: '#030810',
+          background: '#1a2332',  /* dark panel for satellite imagery — intentional contrast */
           lineHeight: 0,
-          minHeight: '280px',
+          minHeight: '260px',
         }}
       >
         {imgUrl && !imgError ? (
@@ -158,7 +146,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
             alt={currentMode.desc}
             style={{
               width: '100%',
-              maxHeight: 420,
+              maxHeight: 400,
               minHeight: '220px',
               objectFit: 'contain',
               display: 'block',
@@ -171,11 +159,11 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         ) : (
           <div
             style={{
-              height: 280,
+              height: 260,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--text-muted)',
+              color: '#94A3B8',
               fontSize: '12px',
               letterSpacing: '0.04em',
             }}
@@ -184,7 +172,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
           </div>
         )}
 
-        {/* ── Image metadata overlay ─────────────────────────── */}
+        {/* ── Metadata overlay on the image ─────────────────── */}
         <div
           style={{
             position: 'absolute',
@@ -192,7 +180,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
             left: 0,
             right: 0,
             padding: '6px 12px',
-            background: 'rgba(3,8,16,0.82)',
+            background: 'rgba(15,23,42,0.75)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -201,14 +189,14 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         >
           <span
             className="mono"
-            style={{ fontSize: '10px', color: 'rgba(255,255,255,0.38)', letterSpacing: '0.06em' }}
+            style={{ fontSize: '10px', color: 'rgba(255,255,255,0.55)', letterSpacing: '0.06em' }}
           >
             {metadata?.channel_label || 'INSAT-3DR'}
           </span>
           {metadata?.timestamp && (
             <span
               className="mono"
-              style={{ fontSize: '10px', color: 'rgba(255,255,255,0.26)', letterSpacing: '0.04em' }}
+              style={{ fontSize: '10px', color: 'rgba(255,255,255,0.40)', letterSpacing: '0.04em' }}
             >
               {new Date(metadata.timestamp).toISOString().replace('T', ' ').slice(0, 16)} UTC
             </span>
@@ -224,7 +212,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '3px',
-          background: 'var(--bg-surface)',
+          background: 'var(--bg-raised)',
         }}
       >
         <p

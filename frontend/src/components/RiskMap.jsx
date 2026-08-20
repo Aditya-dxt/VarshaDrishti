@@ -1,14 +1,14 @@
 /**
- * RiskMap.jsx
- * Full-bleed Leaflet map. No rounded corners on wrapper.
- * Dark CartoDB tiles, de-saturated. Risk marker + pulsing ring.
+ * RiskMap.jsx — Light theme
+ * Leaflet map with light CartoDB tiles.
+ * Clean marker + pulsing ring. No dark styling.
  * All coordinates come from props — nothing hardcoded.
  *
  * Props:
  *   metadata   — { latitude, longitude, location, timestamp }
  *   prediction — { label }
  *   height     — number (px), default 340
- *   zoom       — number, default 7; pass 6 for wider regional view
+ *   zoom       — number, default 7
  */
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { useEffect } from 'react';
@@ -16,7 +16,7 @@ import 'leaflet/dist/leaflet.css';
 import { getRiskMeta, formatTimestamp } from '../utils/riskHelpers.js';
 import EmptyState from './EmptyState.jsx';
 
-/* ── Recenter helper — re-flies when coordinates change ─────── */
+/* ── Recenter helper ──────────────────────────────────────────── */
 function RecenterView({ center, zoom }) {
   const map = useMap();
   useEffect(() => {
@@ -55,54 +55,69 @@ export default function RiskMap({ metadata, prediction, height = 340, zoom = 7 }
         zoomControl={true}
         attributionControl={false}
       >
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+        {/* Light CartoDB tiles */}
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
 
         <RecenterView center={center} zoom={zoom} />
 
-        {/* Outermost diffuse ring — pulsing opacity only */}
+        {/* Outermost diffuse ring */}
         <CircleMarker
           center={center}
           radius={44}
           pathOptions={{
-            color:       meta.dotColor,
-            fill:        false,
-            weight:      1,
-            opacity:     0.08,
-            className:   'animate-pulse-ring',
+            color:     meta.dotColor,
+            fill:      false,
+            weight:    1.5,
+            opacity:   0.12,
+            className: 'animate-pulse-ring',
           }}
         />
 
-        {/* Mid ring — thin, low opacity */}
+        {/* Mid ring */}
         <CircleMarker
           center={center}
-          radius={28}
+          radius={26}
           pathOptions={{
-            color:       meta.dotColor,
-            fill:        false,
-            weight:      1,
-            opacity:     0.20,
+            color:   meta.dotColor,
+            fill:    false,
+            weight:  1.5,
+            opacity: 0.28,
           }}
         />
 
         {/* Primary filled marker */}
         <CircleMarker
           center={center}
-          radius={10}
+          radius={9}
           pathOptions={{
             color:       meta.dotColor,
             fillColor:   meta.dotColor,
-            fillOpacity: 0.30,
-            weight:      1.5,
+            fillOpacity: 0.45,
+            weight:      2,
           }}
         >
           <Popup>
-            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', minWidth: 160 }}>
-              <p style={{ fontWeight: 600, color: meta.dotColor, margin: '0 0 5px' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '12px',
+                minWidth: 160,
+                color: 'var(--text-primary)',
+              }}
+            >
+              <p style={{ fontWeight: 700, color: meta.dotColor, margin: '0 0 5px' }}>
                 {meta.label}
               </p>
               <p style={{ color: 'var(--text-secondary)', margin: '0 0 3px' }}>{location}</p>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', margin: '0 0 3px' }}>
-                {latStr} &nbsp; {lonStr}
+              <p
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '10px',
+                  color: 'var(--text-muted)',
+                  margin: '0 0 3px',
+                }}
+              >
+                {latStr}&nbsp;&nbsp;{lonStr}
               </p>
               <p style={{ color: 'var(--text-muted)', fontSize: '11px', margin: 0 }}>
                 {formatTimestamp(timestamp)}
@@ -112,15 +127,16 @@ export default function RiskMap({ metadata, prediction, height = 340, zoom = 7 }
         </CircleMarker>
       </MapContainer>
 
-      {/* ── Coordinate annotation — absolute overlay ───────── */}
+      {/* ── Coordinate annotation overlay ───────────────────── */}
       <div
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          padding: '5px 10px',
-          background: 'rgba(5,11,20,0.80)',
+          padding: '5px 12px',
+          background: 'rgba(255,255,255,0.88)',
+          borderTop: '1px solid rgba(0,0,0,0.06)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -130,15 +146,15 @@ export default function RiskMap({ metadata, prediction, height = 340, zoom = 7 }
       >
         <span
           className="coord"
-          style={{ fontSize: '10px', color: 'rgba(136,150,168,0.7)' }}
+          style={{ fontSize: '10px', color: 'var(--text-muted)' }}
         >
-          {latStr} &nbsp;·&nbsp; {lonStr}
+          {latStr}&nbsp;·&nbsp;{lonStr}
         </span>
         {location && (
           <span
             style={{
               fontSize: '10px',
-              color: 'rgba(136,150,168,0.5)',
+              color: 'var(--text-muted)',
               letterSpacing: '0.03em',
               maxWidth: '55%',
               overflow: 'hidden',

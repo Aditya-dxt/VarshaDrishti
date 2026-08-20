@@ -1,5 +1,5 @@
 /**
- * LoadingState.jsx — flat skeleton and spinner.
+ * LoadingState.jsx — Light theme skeleton loader.
  */
 export default function LoadingState({ label = 'Loading…', compact = false, lines = 3 }) {
   if (compact) {
@@ -12,7 +12,7 @@ export default function LoadingState({ label = 'Loading…', compact = false, li
             width: 13,
             height: 13,
             borderRadius: '50%',
-            border: '1px solid var(--border-mid)',
+            border: '2px solid var(--border-mid)',
             borderTopColor: 'var(--accent)',
           }}
           aria-hidden="true"

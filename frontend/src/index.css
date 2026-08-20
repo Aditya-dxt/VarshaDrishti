@@ -1,78 +1,80 @@
 @import "tailwindcss";
 
 /* ════════════════════════════════════════════════════════════
-   BHOOMIDRISHTI — Premium Meteorological Intelligence Console
-   Design language: scientific · restrained · precise · legible
+   BHOOMIDRISHTI — Scientific Meteorological Intelligence Console
+   Light theme. Clean, institutional, precise.
    Typography-led hierarchy. Color communicates meaning only.
-   No glows. No gradients. No excessive rounding.
+   No glows. No gradients. No shadows. No glassmorphism.
    ════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
     /* ── Surfaces ──────────────────────────────────────────────
-       Atmospheric navy. Readable, not sci-fi dark.
-       Each step adds ~7-8 lightness units. */
-    --bg-base:      #070B12;   /* page ground */
-    --bg-surface:   #0D131C;   /* primary surface — cards, sidebar */
-    --bg-raised:    #121A24;   /* elevated surface — hover, inputs */
-    --bg-overlay:   #182030;   /* highest surface — dropdowns, tooltips */
-    --bg-input:     #0F1720;
+       Warm off-white ground. Pure white panels.
+       Hierarchy through borders and subtle fill, not depth. */
+    --bg-base:      #F5F7FA;   /* page ground — very light neutral */
+    --bg-surface:   #FFFFFF;   /* primary surface — panels, sidebar, cards */
+    --bg-raised:    #F8FAFC;   /* secondary surface — table rows, hover states */
+    --bg-overlay:   #F1F5F9;   /* input backgrounds, tags */
+    --bg-input:     #F8FAFC;
 
     /* ── Layout ────────────────────────────────────────────────*/
-    --sidebar-w:    240px;
+    --sidebar-w:    220px;
     --content-max:  1200px;
 
     /* ── Borders ───────────────────────────────────────────────
-       Flat 1px lines. No box shadows. */
-    --border:         rgba(255,255,255,0.065);
-    --border-mid:     rgba(255,255,255,0.10);
-    --border-strong:  rgba(255,255,255,0.16);
+       Flat 1px lines. No shadows. */
+    --border:         #E2E8F0;
+    --border-mid:     #CBD5E1;
+    --border-strong:  #94A3B8;
 
     /* ── Typography ────────────────────────────────────────────
-       Restrained hierarchy. Primary white → slate only. */
-    --text-primary:    #F1F5F9;   /* nearly white — headings, key numbers */
-    --text-secondary:  #A7B2C0;   /* slate — body, labels */
-    --text-muted:      #6F7C8C;   /* muted slate — captions, meta */
-    --text-dim:        #3E4E5E;   /* very muted — dividers, placeholders */
+       Dark navy primary → slate body → muted secondary */
+    --text-primary:    #0F172A;   /* near-black — headings, key numbers */
+    --text-secondary:  #475569;   /* slate-600 — body, labels */
+    --text-muted:      #64748B;   /* slate-500 — captions, meta */
+    --text-dim:        #94A3B8;   /* slate-400 — placeholders, subtle elements */
 
     /* ── Accent ────────────────────────────────────────────────
-       Cool blue-gray. UI affordances only — not decorative. */
-    --accent:          #6B8FAF;
-    --accent-soft:     rgba(107,143,175,0.12);
-    --accent-border:   rgba(107,143,175,0.25);
+       Professional blue. Used for interactive affordances only. */
+    --accent:          #2563EB;   /* blue-600 */
+    --accent-light:    #DBEAFE;   /* blue-100 — light accent fill */
+    --accent-soft:     rgba(37,99,235,0.08);
+    --accent-border:   rgba(37,99,235,0.30);
 
     /* ── Active nav indicator ──────────────────────────────────*/
-    --nav-active-bg:   rgba(107,143,175,0.08);
-    --nav-active-border: #6B8FAF;
+    --nav-active-bg:     #EFF6FF;   /* blue-50 */
+    --nav-active-border: #2563EB;   /* blue-600 */
+    --nav-hover-bg:      #F8FAFC;
 
     /* ── Rainfall severity — SEMANTIC ONLY ────────────────────
-       These colors communicate risk level. Used nowhere else. */
-    --risk-none:          #4B5563;
-    --risk-moderate:      #D97706;
-    --risk-heavy:         #EA580C;
-    --risk-impact:        #DC2626;
+       Risk colors map directly to meteorological severity.
+       Used nowhere else in the UI. */
+    --risk-none:          #64748B;   /* slate-500 */
+    --risk-moderate:      #F59E0B;   /* amber-500 */
+    --risk-heavy:         #F97316;   /* orange-500 */
+    --risk-impact:        #DC2626;   /* red-600 */
 
-    --risk-none-bg:       rgba(75,85,99,0.10);
-    --risk-moderate-bg:   rgba(217,119,6,0.10);
-    --risk-heavy-bg:      rgba(234,88,12,0.10);
-    --risk-impact-bg:     rgba(220,38,38,0.10);
+    --risk-none-bg:       rgba(100,116,139,0.08);
+    --risk-moderate-bg:   rgba(245,158,11,0.08);
+    --risk-heavy-bg:      rgba(249,115,22,0.08);
+    --risk-impact-bg:     rgba(220,38,38,0.08);
 
-    --risk-none-border:      rgba(75,85,99,0.22);
-    --risk-moderate-border:  rgba(217,119,6,0.28);
-    --risk-heavy-border:     rgba(234,88,12,0.28);
-    --risk-impact-border:    rgba(220,38,38,0.28);
+    --risk-none-border:      rgba(100,116,139,0.25);
+    --risk-moderate-border:  rgba(245,158,11,0.35);
+    --risk-heavy-border:     rgba(249,115,22,0.35);
+    --risk-impact-border:    rgba(220,38,38,0.35);
 
     /* ── Status semantics ──────────────────────────────────────*/
-    --status-ok:      #22C55E;
-    --status-warn:    #D97706;
-    --status-error:   #DC2626;
+    --status-ok:      #16A34A;   /* green-600 */
+    --status-warn:    #D97706;   /* amber-600 */
+    --status-error:   #DC2626;   /* red-600 */
 
     /* ── Typography ────────────────────────────────────────────*/
     --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
     --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
 
-    /* ── Spacing scale ─────────────────────────────────────────
-       4px base unit. Stick to this throughout. */
+    /* ── Spacing scale — 4px base ───────────────────────────── */
     --sp-1:    4px;
     --sp-2:    8px;
     --sp-3:   12px;
@@ -84,18 +86,21 @@
     --sp-10:  40px;
     --sp-12:  48px;
 
-    /* ── Transitions ───────────────────────────────────────────*/
+    /* ── Transitions ────────────────────────────────────────── */
     --t-fast:    100ms ease;
-    --t-base:    180ms ease;
-    --t-slow:    280ms ease;
+    --t-base:    160ms ease;
+    --t-slow:    260ms ease;
 
-    /* ── Legacy compat (keep existing component refs working) ──*/
+    /* ── Legacy compat ──────────────────────────────────────── */
     --section-h-pad: var(--sp-7);
     --section-v-pad: var(--sp-3);
   }
 }
 
-/* ── Reset & Base ──────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   RESET & BASE
+   ════════════════════════════════════════════════════════════ */
+
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -113,12 +118,12 @@ body {
 /* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
 /* ── Focus ──────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -128,34 +133,32 @@ body {
 
 .mono { font-family: var(--font-mono); }
 
-/* Overline / section label — uppercase, tracked, muted */
+/* Section overline label */
 .label {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
+  font-weight: 700;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-/* Coordinate display */
+/* Coordinate / data display */
 .coord {
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-secondary);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 /* ════════════════════════════════════════════════════════════
-   LAYOUT PRIMITIVES
+   APP SHELL LAYOUT
    ════════════════════════════════════════════════════════════ */
 
-/* App shell: sidebar + content */
 .app-shell {
   display: flex;
   min-height: 100vh;
 }
 
-/* Main content area — offset by sidebar */
 .app-content {
   flex: 1;
   min-width: 0;
@@ -163,9 +166,10 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--bg-base);
 }
 
-/* Surface containers */
+/* Surfaces */
 .surface {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -173,11 +177,6 @@ body {
 .surface-raised {
   background: var(--bg-raised);
   border: 1px solid var(--border);
-}
-
-/* Standard panel — border bottom divider sections */
-.panel {
-  border-bottom: 1px solid var(--border);
 }
 
 /* Thin horizontal rule */
@@ -199,10 +198,7 @@ body {
   padding: var(--section-v-pad) 20px;
 }
 
-/* ── Content padding ────────────────────────────────────────── */
-.content-pad {
-  padding: 0 var(--sp-7);
-}
+.content-pad { padding: 0 var(--sp-7); }
 
 /* ════════════════════════════════════════════════════════════
    SIDEBAR
@@ -238,32 +234,33 @@ body {
   padding: var(--sp-4) var(--sp-5);
   border-top: 1px solid var(--border);
   flex-shrink: 0;
+  background: var(--bg-raised);
 }
 
-/* Nav item */
+/* Nav items */
 .nav-item {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: var(--sp-2) var(--sp-5);
+  padding: 9px var(--sp-5);
   font-size: 13px;
   font-weight: 450;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-decoration: none;
   border-left: 2px solid transparent;
   transition: color var(--t-base), background var(--t-base), border-color var(--t-base);
   cursor: pointer;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
 }
 .nav-item:hover {
-  color: var(--text-secondary);
-  background: rgba(255,255,255,0.025);
+  color: var(--text-primary);
+  background: var(--nav-hover-bg);
 }
 .nav-item.active {
-  color: var(--text-primary);
+  color: var(--accent);
   background: var(--nav-active-bg);
   border-left-color: var(--nav-active-border);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -289,7 +286,7 @@ body {
 
 .metric-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -298,8 +295,8 @@ body {
 
 .metric-value {
   font-family: var(--font-mono);
-  font-size: 28px;
-  font-weight: 300;
+  font-size: 30px;
+  font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--text-primary);
   line-height: 1;
@@ -319,9 +316,9 @@ body {
    ════════════════════════════════════════════════════════════ */
 
 .ev-tab {
-  padding: var(--sp-2) var(--sp-4) var(--sp-2);
+  padding: 10px var(--sp-4);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -329,12 +326,16 @@ body {
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: color var(--t-base), border-color var(--t-base);
+  transition: color var(--t-base), border-color var(--t-base), background var(--t-base);
 }
-.ev-tab:hover { color: var(--text-secondary); }
+.ev-tab:hover {
+  color: var(--text-secondary);
+  background: var(--bg-raised);
+}
 .ev-tab.active {
-  color: var(--text-primary);
+  color: var(--accent);
   border-bottom-color: var(--accent);
+  background: var(--accent-light);
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -346,39 +347,42 @@ body {
 .data-table td { padding: 10px 16px; text-align: left; }
 .data-table thead tr { border-bottom: 1px solid var(--border-mid); }
 .data-table tbody tr { border-bottom: 1px solid var(--border); }
+.data-table tbody tr:hover { background: var(--bg-raised); }
 .data-table tbody tr:last-child { border-bottom: none; }
-.data-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; color: var(--text-muted); text-transform: uppercase; }
+.data-table th { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; color: var(--text-muted); text-transform: uppercase; }
 .data-table td { font-size: 13px; color: var(--text-secondary); }
 
 /* ════════════════════════════════════════════════════════════
-   LEAFLET
+   LEAFLET MAP
    ════════════════════════════════════════════════════════════ */
 
 .leaflet-container {
-  background: #050b14 !important;
+  background: #e8ecf0 !important;
   font-family: var(--font-sans) !important;
 }
-.leaflet-tile-pane  { filter: brightness(0.50) saturate(0.28); }
+/* Use light CartoDB tiles at full brightness — no dark filter */
+.leaflet-tile-pane  { filter: saturate(0.55) brightness(0.96); }
 .leaflet-control-attribution { display: none !important; }
 .leaflet-control-zoom {
-  border: 1px solid var(--border) !important;
+  border: 1px solid var(--border-mid) !important;
   box-shadow: none !important;
 }
 .leaflet-control-zoom a {
-  background: var(--bg-raised) !important;
+  background: var(--bg-surface) !important;
   color: var(--text-secondary) !important;
   border-color: var(--border) !important;
   line-height: 26px !important;
+  font-weight: 500 !important;
 }
-.leaflet-control-zoom a:hover { background: var(--bg-overlay) !important; }
+.leaflet-control-zoom a:hover { background: var(--bg-raised) !important; }
 .leaflet-popup-content-wrapper {
-  background: var(--bg-raised);
+  background: var(--bg-surface);
   border: 1px solid var(--border-mid);
   border-radius: 4px;
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   color: var(--text-primary);
 }
-.leaflet-popup-tip { background: var(--bg-raised); }
+.leaflet-popup-tip { background: var(--bg-surface); }
 
 /* ════════════════════════════════════════════════════════════
    GRAD-CAM COLOR SCALE
@@ -389,13 +393,13 @@ body {
   border-radius: 0;
   background: linear-gradient(
     to right,
-    #0e1a6e,   /* low attention  — deep blue  */
-    #2563eb,   /* cool           — blue       */
-    #06b6d4,   /* teal                        */
-    #22c55e,   /* mid            — green      */
-    #facc15,   /* warm           — yellow     */
-    #f97316,   /* hot            — orange     */
-    #dc2626    /* peak attention — red        */
+    #0e1a6e,
+    #2563eb,
+    #06b6d4,
+    #22c55e,
+    #facc15,
+    #f97316,
+    #dc2626
   );
 }
 
@@ -404,22 +408,20 @@ body {
    ════════════════════════════════════════════════════════════ */
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position:  200% 0; }
 }
 @keyframes pulse-ring {
-  0%, 100% { opacity: 0.15; }
-  50%       { opacity: 0.35; }
+  0%, 100% { opacity: 0.25; }
+  50%       { opacity: 0.55; }
 }
 
-.animate-fade-in    { animation: fadeUp 0.25s ease both; }
+.animate-fade-in    { animation: fadeUp 0.22s ease both; }
 .animate-spin-slow  { animation: spin 1.2s linear infinite; }
 .animate-pulse-ring { animation: pulse-ring 2.6s ease-in-out infinite; }
 
@@ -427,12 +429,12 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--bg-raised) 25%,
-    rgba(255,255,255,0.035) 50%,
-    var(--bg-raised) 75%
+    #E2E8F0 25%,
+    #F1F5F9 50%,
+    #E2E8F0 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
+  animation: shimmer 1.6s infinite;
   border-radius: 2px;
 }
 
@@ -445,21 +447,22 @@ body {
   align-items: center;
   gap: var(--sp-2);
   padding: var(--sp-2) var(--sp-4);
-  background: var(--bg-raised);
+  background: var(--bg-surface);
   border: 1px solid var(--border-mid);
   color: var(--text-secondary);
   font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color var(--t-base), color var(--t-base), background var(--t-base);
-  border-radius: 2px;
+  border-radius: 3px;
 }
 .btn:hover:not(:disabled) {
   border-color: var(--border-strong);
   color: var(--text-primary);
+  background: var(--bg-raised);
 }
 .btn:disabled {
   opacity: 0.45;
@@ -467,14 +470,14 @@ body {
 }
 
 .btn-primary {
-  background: rgba(107,143,175,0.10);
-  border-color: var(--accent-border);
-  color: var(--accent);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
 }
 .btn-primary:hover:not(:disabled) {
-  background: rgba(107,143,175,0.16);
-  border-color: var(--accent);
-  color: var(--text-primary);
+  background: #1D4ED8;
+  border-color: #1D4ED8;
+  color: #FFFFFF;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -495,9 +498,20 @@ body {
     flex-direction: row;
     height: auto;
   }
-  .sidebar-brand { border-bottom: none; border-right: 1px solid var(--border); padding: var(--sp-3) var(--sp-4); }
+  .sidebar-brand {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    padding: var(--sp-3) var(--sp-4);
+  }
   .sidebar-nav { display: flex; flex-direction: row; padding: 0; }
-  .nav-item { padding: var(--sp-3) var(--sp-3); border-left: none; border-bottom: 2px solid transparent; }
-  .nav-item.active { border-left-color: transparent; border-bottom-color: var(--nav-active-border); }
+  .nav-item {
+    padding: var(--sp-3);
+    border-left: none;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--nav-active-border);
+  }
   .sidebar-footer { display: none; }
 }

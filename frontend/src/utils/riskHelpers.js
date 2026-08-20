@@ -1,7 +1,7 @@
 /**
  * riskHelpers.js
  * Single source of truth for risk label → visual token mapping.
- * All colour values reference CSS custom properties where possible.
+ * Colors aligned with the light theme palette.
  */
 
 export const RISK_META = {
@@ -9,41 +9,41 @@ export const RISK_META = {
     label:       'No Rain',
     shortLabel:  'No Rain',
     colorClass:  'risk-badge-none',
-    textColor:   '#4b5563',
-    dotColor:    '#4b5563',
-    barColor:    '#4b5563',
-    bgColor:     'rgba(75,85,99,0.10)',
-    borderColor: 'rgba(75,85,99,0.25)',
+    textColor:   '#64748B',   /* slate-500 */
+    dotColor:    '#64748B',
+    barColor:    '#64748B',
+    bgColor:     'rgba(100,116,139,0.08)',
+    borderColor: 'rgba(100,116,139,0.25)',
   },
   moderate: {
     label:       'Moderate Rain',
     shortLabel:  'Moderate',
     colorClass:  'risk-badge-moderate',
-    textColor:   '#d97706',
-    dotColor:    '#d97706',
-    barColor:    '#d97706',
-    bgColor:     'rgba(217,119,6,0.10)',
-    borderColor: 'rgba(217,119,6,0.30)',
+    textColor:   '#D97706',   /* amber-600 */
+    dotColor:    '#D97706',
+    barColor:    '#F59E0B',   /* amber-500 */
+    bgColor:     'rgba(245,158,11,0.08)',
+    borderColor: 'rgba(245,158,11,0.35)',
   },
   heavy: {
     label:       'Heavy Rain',
     shortLabel:  'Heavy',
     colorClass:  'risk-badge-heavy',
-    textColor:   '#ea580c',
-    dotColor:    '#ea580c',
-    barColor:    '#ea580c',
-    bgColor:     'rgba(234,88,12,0.10)',
-    borderColor: 'rgba(234,88,12,0.30)',
+    textColor:   '#EA580C',   /* orange-600 */
+    dotColor:    '#EA580C',
+    barColor:    '#F97316',   /* orange-500 */
+    bgColor:     'rgba(249,115,22,0.08)',
+    borderColor: 'rgba(249,115,22,0.35)',
   },
   high_impact: {
     label:       'High-Impact Rain',
     shortLabel:  'High Impact',
     colorClass:  'risk-badge-impact',
-    textColor:   '#dc2626',
-    dotColor:    '#dc2626',
-    barColor:    '#dc2626',
-    bgColor:     'rgba(220,38,38,0.10)',
-    borderColor: 'rgba(220,38,38,0.30)',
+    textColor:   '#DC2626',   /* red-600 */
+    dotColor:    '#DC2626',
+    barColor:    '#DC2626',
+    bgColor:     'rgba(220,38,38,0.08)',
+    borderColor: 'rgba(220,38,38,0.35)',
   },
 };
 

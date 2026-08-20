@@ -1,17 +1,16 @@
 /**
- * SHAPChart.jsx
+ * SHAPChart.jsx — Light theme
  * Scientific feature contribution visualization.
- * Ranked bars with directional arrow indicator.
- * Positive contributions → increases risk (muted blue).
- * Negative contributions → decreases risk (muted amber).
- * No decorative effects. No rounded caps.
+ * Positive (increases risk): strong blue #2563EB
+ * Negative (decreases risk): muted terracotta/orange #C2410C
+ * Clean dark-on-white typography.
  */
 import EmptyState   from './EmptyState.jsx';
 import LoadingState from './LoadingState.jsx';
 
-/* Positive: cool blue-slate. Negative: muted amber-orange. */
-const POS_COLOR = '#5d8aa8';
-const NEG_COLOR = '#b07840';
+/* Use accent blue for positive, muted orange-red for negative */
+const POS_COLOR = '#2563EB';   /* blue-600 — risk-increasing */
+const NEG_COLOR = '#C2410C';   /* orange-700 — risk-reducing */
 
 export default function SHAPChart({ shap, loading }) {
   if (loading) return <LoadingState label="Computing feature contributions…" lines={4} />;
@@ -32,7 +31,6 @@ export default function SHAPChart({ shap, loading }) {
 
   return (
     <div className="animate-fade-in">
-      {/* Rank list */}
       {sorted.map((feature, i) => {
         const isPositive = feature.contribution >= 0;
         const barPct     = maxAbs > 0 ? Math.abs(feature.contribution) / maxAbs : 0;
@@ -47,7 +45,7 @@ export default function SHAPChart({ shap, loading }) {
               padding: '11px 0',
             }}
           >
-            {/* Label row */}
+            {/* Label + value row */}
             <div
               style={{
                 display: 'flex',
@@ -66,14 +64,7 @@ export default function SHAPChart({ shap, loading }) {
                 {feature.name}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                {/* Direction arrow */}
-                <span
-                  style={{
-                    fontSize: '10px',
-                    color,
-                    lineHeight: 1,
-                  }}
-                >
+                <span style={{ fontSize: '11px', color, lineHeight: 1 }}>
                   {isPositive ? '↑' : '↓'}
                 </span>
                 <span
@@ -81,8 +72,8 @@ export default function SHAPChart({ shap, loading }) {
                   style={{
                     fontSize: '11px',
                     color,
-                    letterSpacing: '0.03em',
-                    fontWeight: 500,
+                    letterSpacing: '0.02em',
+                    fontWeight: 600,
                   }}
                 >
                   {sign}{feature.contribution.toFixed(2)}
@@ -90,11 +81,11 @@ export default function SHAPChart({ shap, loading }) {
               </div>
             </div>
 
-            {/* Bar track */}
+            {/* Bar */}
             <div
               style={{
                 height: '3px',
-                background: 'var(--bg-overlay)',
+                background: '#E2E8F0',
                 width: '100%',
               }}
             >
@@ -125,8 +116,8 @@ export default function SHAPChart({ shap, loading }) {
           { color: POS_COLOR, arrow: '↑', label: 'Increases predicted risk' },
           { color: NEG_COLOR, arrow: '↓', label: 'Decreases predicted risk' },
         ].map(({ color, arrow, label }) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '12px', color, lineHeight: 1 }}>{arrow}</span>
+          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <span style={{ fontSize: '11px', color, lineHeight: 1 }}>{arrow}</span>
             <span
               style={{
                 display: 'inline-block',

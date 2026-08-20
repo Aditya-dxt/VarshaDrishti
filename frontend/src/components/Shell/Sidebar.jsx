@@ -1,15 +1,10 @@
 /**
  * Sidebar.jsx — Application sidebar shell
- *
- * Persistent left sidebar. Professional scientific intelligence platform shell.
- * Active route: subtle lighter surface + thin left accent + stronger text.
- * No glows, no gradients, no heavy animation.
- *
- * Props:
- *   systemStatus — 'ready' | 'processing' | 'waiting' | 'unavailable'
+ * Light scientific theme. White background, dark text, blue active state.
+ * Restrained, professional, institutional.
  */
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Clock, BarChart2, Satellite } from 'lucide-react';
+import { LayoutDashboard, Clock, BarChart2, Satellite, RefreshCw, Settings } from 'lucide-react';
 
 const NAV_ITEMS = [
   { to: '/dashboard',  label: 'Overview',          Icon: LayoutDashboard },
@@ -18,10 +13,10 @@ const NAV_ITEMS = [
 ];
 
 const STATUS_META = {
-  ready:       { label: 'System Ready',       dot: '#22C55E' },
+  ready:       { label: 'System Online',      dot: '#16A34A' },
   processing:  { label: 'Processing',         dot: '#D97706' },
   waiting:     { label: 'Awaiting Data',      dot: '#D97706' },
-  unavailable: { label: 'System Unavailable', dot: '#DC2626' },
+  unavailable: { label: 'Offline',            dot: '#DC2626' },
 };
 
 export default function Sidebar({ systemStatus = 'ready' }) {
@@ -37,60 +32,59 @@ export default function Sidebar({ systemStatus = 'ready' }) {
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            marginBottom: '10px',
+            marginBottom: '8px',
           }}
         >
           <div
             style={{
-              width: 30,
-              height: 30,
-              background: 'rgba(107,143,175,0.12)',
-              border: '1px solid rgba(107,143,175,0.22)',
+              width: 28,
+              height: 28,
+              background: 'var(--accent-light)',
+              border: '1px solid var(--accent-border)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
+              borderRadius: '4px',
             }}
           >
-            <Satellite size={14} color="var(--accent)" />
+            <Satellite size={13} color="var(--accent)" />
           </div>
-          <div>
-            <div
-              style={{
-                fontSize: '12px',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                letterSpacing: '0.10em',
-                lineHeight: 1.2,
-              }}
-            >
-              BHOOMIDRISHTI
-            </div>
+          <div
+            style={{
+              fontSize: '13px',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              letterSpacing: '0.06em',
+              lineHeight: 1.2,
+            }}
+          >
+            BHOOMIDRISHTI
           </div>
         </div>
         <p
           style={{
             fontSize: '10px',
-            color: 'var(--text-dim)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.04em',
             margin: 0,
-            lineHeight: 1.4,
+            lineHeight: 1.5,
             fontWeight: 500,
+            paddingLeft: '38px',
           }}
         >
-          Satellite Rainfall<br />Intelligence
+          Satellite Rainfall Intelligence
         </p>
       </div>
 
       {/* ── Navigation ─────────────────────────────────────── */}
       <nav className="sidebar-nav" role="navigation" aria-label="Main navigation">
-
         <p
           className="label"
           style={{
-            padding: '16px 20px 8px',
+            padding: '16px 20px 6px',
             display: 'block',
+            color: 'var(--text-dim)',
           }}
         >
           Navigation
@@ -100,11 +94,9 @@ export default function Sidebar({ systemStatus = 'ready' }) {
           <NavLink
             key={to}
             to={to}
-            className={({ isActive }) =>
-              `nav-item ${isActive ? 'active' : ''}`
-            }
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <Icon size={15} style={{ flexShrink: 0, opacity: 0.8 }} />
+            <Icon size={15} style={{ flexShrink: 0 }} />
             <span>{label}</span>
           </NavLink>
         ))}
@@ -112,15 +104,16 @@ export default function Sidebar({ systemStatus = 'ready' }) {
 
       {/* ── System status footer ────────────────────────────── */}
       <div className="sidebar-footer">
-        <p className="label" style={{ marginBottom: '10px' }}>System</p>
+        <p className="label" style={{ marginBottom: '10px', color: 'var(--text-dim)' }}>
+          System
+        </p>
 
-        {/* Status */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            marginBottom: '8px',
+            marginBottom: '6px',
           }}
           aria-live="polite"
           aria-label={`System status: ${status.label}`}
@@ -128,8 +121,8 @@ export default function Sidebar({ systemStatus = 'ready' }) {
           <span
             style={{
               display: 'inline-block',
-              width: 6,
-              height: 6,
+              width: 7,
+              height: 7,
               borderRadius: '50%',
               background: status.dot,
               flexShrink: 0,
@@ -139,21 +132,21 @@ export default function Sidebar({ systemStatus = 'ready' }) {
             style={{
               fontSize: '12px',
               color: 'var(--text-secondary)',
-              fontWeight: 450,
+              fontWeight: 500,
             }}
           >
             {status.label}
           </span>
         </div>
 
-        {/* Instrument */}
         <div
           style={{
             fontSize: '10px',
             color: 'var(--text-dim)',
-            letterSpacing: '0.07em',
+            letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            fontWeight: 500,
+            fontWeight: 600,
+            paddingTop: '2px',
           }}
         >
           INSAT-3DR

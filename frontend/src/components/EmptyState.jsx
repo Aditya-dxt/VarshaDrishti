@@ -1,5 +1,5 @@
 /**
- * EmptyState.jsx — flat, minimal, no icon circle or coloured containers.
+ * EmptyState.jsx — Light theme. Clean empty/placeholder state.
  */
 export default function EmptyState({ title, body, action, onAction }) {
   return (
@@ -15,7 +15,7 @@ export default function EmptyState({ title, body, action, onAction }) {
       }}
       role="status"
     >
-      <p style={{ color: 'var(--text-secondary)', fontWeight: 500, margin: '0 0 6px' }}>
+      <p style={{ color: 'var(--text-secondary)', fontWeight: 600, margin: '0 0 6px', fontSize: '14px' }}>
         {title}
       </p>
       {body && (
@@ -24,19 +24,7 @@ export default function EmptyState({ title, body, action, onAction }) {
         </p>
       )}
       {action && onAction && (
-        <button
-          onClick={onAction}
-          style={{
-            padding: '8px 20px',
-            background: 'transparent',
-            border: '1px solid var(--border-mid)',
-            color: 'var(--text-secondary)',
-            fontSize: '12px',
-            letterSpacing: '0.05em',
-            cursor: 'pointer',
-            transition: 'border-color 0.15s',
-          }}
-        >
+        <button onClick={onAction} className="btn">
           {action}
         </button>
       )}

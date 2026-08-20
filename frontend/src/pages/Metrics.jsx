@@ -123,7 +123,7 @@ function PerformanceRadar({ overall }) {
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer>
         <RadarChart data={radarData} margin={{ top: 12, right: 32, bottom: 12, left: 32 }}>
-          <PolarGrid stroke="rgba(255,255,255,0.055)" />
+          <PolarGrid stroke="rgba(0,0,0,0.08)" />
           <PolarAngleAxis
             dataKey="metric"
             tick={{

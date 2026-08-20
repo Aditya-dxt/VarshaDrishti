@@ -1,8 +1,8 @@
 /**
- * RiskCard.jsx
- * Primary risk summary panel. Answers: WHAT? HOW CONFIDENT?
- * Typography-led hierarchy. Risk color on label and left accent only.
- * Works as a panel inside the dashboard grid — not a floating card.
+ * RiskCard.jsx — Light theme
+ * Primary risk summary panel.
+ * WHAT? HOW CONFIDENT? Risk color on label + left border only.
+ * Dark charcoal text on white surface. Clean, scientific.
  *
  * Props:
  *   prediction — { label, confidence }
@@ -44,7 +44,8 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
       className="animate-fade-in"
       style={{
         padding: compact ? '18px 24px' : '24px 28px',
-        borderLeft: `2px solid ${meta.dotColor}`,
+        borderLeft: `3px solid ${meta.dotColor}`,
+        background: 'var(--bg-surface)',
       }}
       aria-live="polite"
       aria-label={`Current rainfall risk: ${meta.label}, confidence ${pct}%`}
@@ -53,10 +54,11 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
       <div style={{ marginBottom: '16px' }}>
         <p
           style={{
-            fontSize: '12px',
+            fontSize: '13px',
             color: 'var(--text-secondary)',
             margin: '0 0 2px',
             lineHeight: 1.4,
+            fontWeight: 500,
           }}
         >
           {metadata.location || (latStr && lonStr ? `${latStr}, ${lonStr}` : '—')}
@@ -74,12 +76,12 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
       {/* ── Risk heading (WHAT) ─────────────────────────────── */}
       <h2
         style={{
-          fontSize: compact ? '26px' : '32px',
+          fontSize: compact ? '26px' : '34px',
           fontWeight: 700,
           lineHeight: 1.05,
           color: meta.dotColor,
-          margin: '0 0 4px',
-          letterSpacing: '-0.01em',
+          margin: '0 0 6px',
+          letterSpacing: '-0.02em',
           fontFamily: 'var(--font-sans)',
         }}
       >
@@ -92,12 +94,12 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
           display: 'flex',
           alignItems: 'baseline',
           gap: '10px',
-          marginBottom: '18px',
+          marginBottom: '20px',
         }}
       >
         <span
           style={{
-            fontSize: compact ? '32px' : '40px',
+            fontSize: compact ? '32px' : '42px',
             fontWeight: 300,
             lineHeight: 1,
             color: 'var(--text-primary)',
@@ -114,19 +116,20 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
               color: 'var(--text-muted)',
               letterSpacing: '0.07em',
               textTransform: 'uppercase',
+              fontWeight: 700,
             }}
           >
-            Model Confidence
+            Confidence Level
           </span>
           <span
             style={{
               fontSize: '10px',
               color: 'var(--text-dim)',
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.03em',
+              letterSpacing: '0.02em',
             }}
           >
-            ±{uncertainty}% est. uncertainty
+            ±{uncertainty}% uncertainty
           </span>
         </div>
       </div>
@@ -146,13 +149,14 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
         }}
       >
         <span
-          className={`${badgeClass}`}
+          className={badgeClass}
           style={{
             padding: '3px 10px',
             fontSize: '10px',
-            letterSpacing: '0.06em',
-            fontWeight: 600,
+            letterSpacing: '0.07em',
+            fontWeight: 700,
             textTransform: 'uppercase',
+            borderRadius: '2px',
           }}
         >
           {meta.shortLabel}
@@ -161,10 +165,7 @@ export default function RiskCard({ prediction, metadata, compact = false }) {
         {latStr && lonStr && (
           <span
             className="coord"
-            style={{
-              fontSize: '10px',
-              color: 'var(--text-dim)',
-            }}
+            style={{ fontSize: '10px', color: 'var(--text-dim)' }}
           >
             {latStr}&nbsp;&nbsp;{lonStr}
           </span>

@@ -1,7 +1,8 @@
 /**
- * ConfusionMatrix.jsx — flat, clinical rendering.
- * No decorative borders or card wrappers.
- * Diagonal (correct) → muted blue. Off-diagonal (errors) → muted amber.
+ * ConfusionMatrix.jsx — Light theme
+ * Diagonal (correct) → light blue fill.
+ * Off-diagonal (errors) → light amber fill.
+ * Dark text on light backgrounds.
  */
 export default function ConfusionMatrix({ matrix, labels }) {
   if (!matrix || !labels) return null;
@@ -13,18 +14,18 @@ export default function ConfusionMatrix({ matrix, labels }) {
     const isDiag  = row === col;
     const opacity = value / maxVal;
     const bg = isDiag
-      ? `rgba(93,138,168,${0.08 + opacity * 0.45})`   /* blue for correct */
-      : `rgba(192,112,72,${opacity * 0.40})`;          /* amber for errors */
+      ? `rgba(37,99,235,${0.05 + opacity * 0.18})`    /* blue for correct */
+      : `rgba(220,38,38,${opacity * 0.14})`;           /* red for errors */
     return {
       background:  bg,
       color:       isDiag
-        ? (opacity > 0.45 ? '#c8dde8' : 'var(--text-secondary)')
-        : (opacity > 0.3  ? '#e8c8a8' : 'var(--text-muted)'),
-      fontWeight:  isDiag ? 600 : 400,
-      fontSize:    '13px',
+        ? (opacity > 0.4 ? '#1D4ED8' : 'var(--text-secondary)')
+        : (opacity > 0.3 ? '#B91C1C' : 'var(--text-muted)'),
+      fontWeight:  isDiag ? 700 : 400,
+      fontSize:    '14px',
       fontFamily:  'var(--font-mono)',
       textAlign:   'center',
-      padding:     '11px 8px',
+      padding:     '13px 10px',
     };
   };
 
@@ -33,20 +34,31 @@ export default function ConfusionMatrix({ matrix, labels }) {
       <table
         role="table"
         aria-label="Confusion matrix"
-        style={{ borderCollapse: 'collapse', minWidth: 360 }}
+        style={{ borderCollapse: 'collapse', minWidth: 400 }}
       >
         <thead>
           <tr>
-            <th style={{ padding: '4px 12px 4px 0', fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em', textAlign: 'right', fontWeight: 400 }}>
+            <th
+              style={{
+                padding: '6px 14px 6px 0',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+                color: 'var(--text-muted)',
+                letterSpacing: '0.04em',
+                textAlign: 'right',
+                fontWeight: 400,
+                borderRight: '1px solid var(--border)',
+              }}
+            >
               actual ↓ predicted →
             </th>
             {labels.map((l) => (
               <th
                 key={`col-${l}`}
                 style={{
-                  padding: '4px 8px',
+                  padding: '6px 10px',
                   fontSize: '10px',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: 'var(--text-muted)',
                   letterSpacing: '0.07em',
                   textAlign: 'center',
@@ -63,9 +75,9 @@ export default function ConfusionMatrix({ matrix, labels }) {
             <tr key={ri}>
               <td
                 style={{
-                  padding: '4px 12px 4px 0',
+                  padding: '6px 14px 6px 0',
                   fontSize: '10px',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: 'var(--text-muted)',
                   letterSpacing: '0.07em',
                   textAlign: 'right',
@@ -87,13 +99,21 @@ export default function ConfusionMatrix({ matrix, labels }) {
       </table>
 
       {/* Legend */}
-      <div style={{ display: 'flex', gap: 20, marginTop: 16 }}>
+      <div style={{ display: 'flex', gap: '20px', marginTop: '16px' }}>
         {[
-          { color: 'rgba(93,138,168,0.55)',   label: 'Correct prediction' },
-          { color: 'rgba(192,112,72,0.45)',   label: 'Misclassification'  },
+          { color: 'rgba(37,99,235,0.18)',  label: 'Correct prediction' },
+          { color: 'rgba(220,38,38,0.14)',  label: 'Misclassification'  },
         ].map(({ color, label }) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ display: 'inline-block', width: 12, height: 12, background: color }} />
+          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span
+              style={{
+                display: 'inline-block',
+                width: 12,
+                height: 12,
+                background: color,
+                border: '1px solid var(--border-mid)',
+              }}
+            />
             <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{label}</span>
           </div>
         ))}
