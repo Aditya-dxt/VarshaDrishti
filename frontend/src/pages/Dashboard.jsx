@@ -1,21 +1,21 @@
 /**
- * Dashboard.jsx — Scientific monitoring console.
+ * Dashboard.jsx — Overview page
  *
- * Layout at 1280px+:
- * ┌─────────────────────────────────────────────────────────────────┐
- * │ [meta bar: last observation · IST clock · refresh]              │
- * ├───────────────────────────────┬─────────────────────────────────┤
- * │ LEFT COLUMN                   │ RIGHT COLUMN (geographic center) │
- * │  ① Risk label + confidence    │  Section: Impact Location        │
- * │  ─────────────────────────── │    Map — dominant (360px)        │
- * │  Section: Probability         │  ─────────────────────────────  │
- * │    Distribution bars          │  Section: Satellite Evidence     │
- * │  ─────────────────────────── │    EvidenceViewer tabs           │
- * │  Section: Feature             │                                  │
- * │    Contributions (SHAP)       │                                  │
- * └───────────────────────────────┴─────────────────────────────────┘
+ * Information hierarchy follows: WHERE → WHAT → HOW CONFIDENT → WHY → EVIDENCE
  *
- * Information flow: WHERE → WHAT → HOW CONFIDENT → WHY → EVIDENCE
+ * Layout (single scrolling column, full content width):
+ * ┌──────────────────────────────────────────────────────┐
+ * │ PAGE HEADER                                          │
+ * ├──────────────────────────────────────────────────────┤
+ * │ MAP (full width, 400px)           ← WHERE            │
+ * ├─────────────────────┬────────────────────────────────┤
+ * │ RISK SUMMARY        │ PROBABILITY DISTRIBUTION       │
+ * │ (WHAT + CONFIDENT)  │                                │
+ * ├─────────────────────┴────────────────────────────────┤
+ * │ FEATURE CONTRIBUTIONS                 ← WHY          │
+ * ├──────────────────────────────────────────────────────┤
+ * │ MODEL EVIDENCE (satellite tabs)       ← EVIDENCE     │
+ * └──────────────────────────────────────────────────────┘
  *
  * API + hook contracts: unchanged.
  */
@@ -24,6 +24,7 @@ import { RefreshCw } from 'lucide-react';
 import { useLatestPrediction }  from '../hooks/useLatestPrediction.js';
 import { getGradCAM }           from '../services/api.js';
 
+import PageHeader       from '../components/PageHeader.jsx';
 import RiskCard         from '../components/RiskCard.jsx';
 import ProbabilityChart from '../components/ProbabilityChart.jsx';
 import EvidenceViewer   from '../components/EvidenceViewer.jsx';
@@ -33,23 +34,33 @@ import DataStatus       from '../components/DataStatus.jsx';
 import LoadingState     from '../components/LoadingState.jsx';
 import ErrorState       from '../components/ErrorState.jsx';
 
-/* ── Consistent section head ────────────────────────────────
-   Renders an uppercase overline label with optional right slot.
-   Uses .section-head CSS class for padding + border-bottom. */
-function SectionHead({ label, right, flush = false }) {
+/* ── Section wrapper ─────────────────────────────────────────
+   Thin label header + content area. Used throughout page. */
+function Section({ label, right, children, noPadding = false }) {
   return (
-    <div className={flush ? 'section-head section-head--flush' : 'section-head'}>
-      <span className="label">{label}</span>
-      {right && (
-        <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-          {right}
-        </span>
+    <div style={{ borderBottom: '1px solid var(--border)' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '11px 28px',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        <span className="label">{label}</span>
+        {right && (
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{right}</span>
+        )}
+      </div>
+      {noPadding ? children : (
+        <div style={{ padding: '0 28px 24px' }}>{children}</div>
       )}
     </div>
   );
 }
 
-/* ── Empty / no prediction yet ─────────────────────────────── */
+/* ── No data / empty state ────────────────────────────────── */
 function NoDataState({ onAnalyze, loading }) {
   return (
     <div
@@ -59,18 +70,23 @@ function NoDataState({ onAnalyze, loading }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '65vh',
+        minHeight: '70vh',
         textAlign: 'center',
         padding: '40px 32px',
       }}
     >
-      <p className="label" style={{ marginBottom: 16 }}>BHOOMIDRISHTI</p>
+      <p
+        className="label"
+        style={{ marginBottom: '16px', letterSpacing: '0.14em' }}
+      >
+        BHOOMIDRISHTI
+      </p>
       <h1
         style={{
-          fontSize: '22px',
+          fontSize: '20px',
           fontWeight: 600,
           color: 'var(--text-primary)',
-          marginBottom: 10,
+          marginBottom: '10px',
           letterSpacing: '-0.01em',
         }}
       >
@@ -82,7 +98,7 @@ function NoDataState({ onAnalyze, loading }) {
           fontSize: '14px',
           maxWidth: 380,
           lineHeight: 1.7,
-          marginBottom: 32,
+          marginBottom: '32px',
         }}
       >
         The latest INSAT-3DR satellite observation has not been processed yet.
@@ -91,37 +107,22 @@ function NoDataState({ onAnalyze, loading }) {
       <button
         onClick={onAnalyze}
         disabled={loading}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '10px 24px',
-          background: 'var(--bg-raised)',
-          border: '1px solid var(--border-mid)',
-          color: 'var(--text-primary)',
-          fontSize: '11px',
-          fontWeight: 600,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          opacity: loading ? 0.5 : 1,
-          transition: 'border-color 0.15s',
-        }}
+        className="btn btn-primary"
       >
         {loading ? (
           <span
             className="animate-spin-slow"
             style={{
               display: 'inline-block',
-              width: 13,
-              height: 13,
+              width: 12,
+              height: 12,
               borderRadius: '50%',
               border: '1px solid var(--text-muted)',
-              borderTopColor: 'var(--text-primary)',
+              borderTopColor: 'var(--accent)',
             }}
           />
         ) : (
-          <RefreshCw size={13} />
+          <RefreshCw size={12} />
         )}
         {loading ? 'Analysing…' : 'Analyse Latest Observation'}
       </button>
@@ -146,8 +147,22 @@ export default function Dashboard() {
   /* ── Loading ── */
   if (loading && !data) {
     return (
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 28px' }}>
-        <LoadingState label="Loading latest satellite prediction…" lines={6} />
+      <div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '14px 28px',
+            borderBottom: '1px solid var(--border)',
+            background: 'var(--bg-surface)',
+          }}
+        >
+          <span className="label" style={{ letterSpacing: '0.14em' }}>BHOOMIDRISHTI / OVERVIEW</span>
+        </div>
+        <div style={{ padding: '40px 28px' }}>
+          <LoadingState label="Loading latest satellite prediction…" lines={6} />
+        </div>
       </div>
     );
   }
@@ -155,10 +170,15 @@ export default function Dashboard() {
   /* ── Error ── */
   if (error) {
     return (
-      <div style={{
-        maxWidth: 1400, margin: '0 auto', padding: '40px 28px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60vh',
+          padding: '40px 28px',
+        }}
+      >
         <ErrorState message={error} onRetry={refetch} />
       </div>
     );
@@ -166,132 +186,120 @@ export default function Dashboard() {
 
   /* ── No data ── */
   if (!data) {
-    return (
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <NoDataState onAnalyze={refetch} loading={loading} />
-      </div>
-    );
+    return <NoDataState onAnalyze={refetch} loading={loading} />;
   }
 
   const { prediction, probabilities, xai, metadata, system } = data;
-
-  /* Evidence viewer: prefer standalone gradcam fetch; fall back to xai.gradcam */
   const evidenceData = gradcamData || xai?.gradcam;
 
-  return (
-    <main
-      className="animate-fade-in"
-      style={{ maxWidth: 1400, margin: '0 auto' }}
+  /* ── Refresh button (used in page header) ── */
+  const RefreshBtn = (
+    <button
+      onClick={refetch}
+      disabled={loading}
+      className="btn"
+      aria-label="Refresh prediction"
     >
-      {/* ── Meta bar ──────────────────────────────────────────── */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '9px 28px',
-          borderBottom: '1px solid var(--border)',
-          gap: 16,
-        }}
+      <RefreshCw
+        size={11}
+        style={{ animation: loading ? 'spin 1.2s linear infinite' : 'none' }}
+      />
+      Refresh
+    </button>
+  );
+
+  return (
+    <main className="animate-fade-in">
+
+      {/* ── Page header ──────────────────────────────────────── */}
+      <PageHeader
+        page="Overview"
+        sub={<DataStatus system={system} />}
+        right={RefreshBtn}
+      />
+
+      {/* ── 1. MAP — WHERE ──────────────────────────────────── */}
+      <Section
+        label="Impact Location"
+        right={metadata?.location}
+        noPadding
       >
-        <DataStatus system={system} />
+        <RiskMap
+          metadata={metadata}
+          prediction={prediction}
+          height={400}
+          zoom={6}
+        />
+      </Section>
 
-        <button
-          onClick={refetch}
-          disabled={loading}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 5,
-            padding: '4px 10px',
-            background: 'transparent',
-            border: '1px solid var(--border)',
-            color: 'var(--text-muted)',
-            fontSize: '10px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.5 : 1,
-            transition: 'border-color 0.15s, color 0.15s',
-          }}
-          aria-label="Refresh prediction"
-        >
-          <RefreshCw
-            size={10}
-            style={{ animation: loading ? 'spin 1.2s linear infinite' : 'none' }}
-          />
-          Refresh
-        </button>
-      </div>
-
-      {/* ── Two-column layout ────────────────────────────────── */}
+      {/* ── 2. Risk summary + Probability side by side ───────── */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.5fr)',
+          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
           borderBottom: '1px solid var(--border)',
         }}
       >
-        {/* ══ LEFT COLUMN — Analysis ═══════════════════════════ */}
+        {/* WHAT + HOW CONFIDENT */}
         <div
           style={{
             borderRight: '1px solid var(--border)',
-            display: 'flex',
-            flexDirection: 'column',
           }}
         >
-          {/* ① Risk (WHAT + HOW CONFIDENT + provenance) */}
+          <div
+            style={{
+              padding: '11px 28px',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            <span className="label">Current Risk</span>
+          </div>
           <RiskCard prediction={prediction} metadata={metadata} />
-
-          {/* ② Probability distribution */}
-          <div style={{ borderTop: '1px solid var(--border)' }}>
-            <SectionHead label="Probability Distribution" />
-            <div style={{ padding: '4px 28px 20px' }}>
-              <ProbabilityChart probabilities={probabilities} />
-            </div>
-          </div>
-
-          {/* ③ Feature contributions — WHY */}
-          <div style={{ borderTop: '1px solid var(--border)', flex: 1 }}>
-            <SectionHead label="Feature Contributions" />
-            <div style={{ padding: '4px 28px 24px' }}>
-              <SHAPChart shap={xai?.shap} loading={false} />
-            </div>
-          </div>
         </div>
 
-        {/* ══ RIGHT COLUMN — Geographic Evidence ═══════════════ */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-
-          {/* Map — dominant (WHERE) */}
-          <div>
-            <SectionHead
-              label="Impact Location"
-              right={metadata?.location}
-              flush
-            />
-            {/* 360px height for genuine map dominance */}
-            <RiskMap metadata={metadata} prediction={prediction} height={360} zoom={6} />
+        {/* PROBABILITY DISTRIBUTION */}
+        <div>
+          <div
+            style={{
+              padding: '11px 28px',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            <span className="label">Probability Distribution</span>
           </div>
-
-          {/* Divider */}
-          <div style={{ borderTop: '1px solid var(--border)' }} />
-
-          {/* EvidenceViewer — Satellite / Grad-CAM / Overlay (EVIDENCE) */}
-          <div style={{ flex: 1 }}>
-            <EvidenceViewer
-              gradcam={evidenceData}
-              metadata={{
-                timestamp:     metadata?.timestamp,
-                channel_label: metadata?.source,
-              }}
-              loading={gcLoading}
-            />
+          <div style={{ padding: '20px 28px 24px' }}>
+            <ProbabilityChart probabilities={probabilities} />
           </div>
-
         </div>
       </div>
+
+      {/* ── 3. FEATURE CONTRIBUTIONS — WHY ──────────────────── */}
+      <Section label="Why This Prediction?">
+        <div style={{ paddingTop: '16px' }}>
+          <SHAPChart shap={xai?.shap} loading={false} />
+        </div>
+      </Section>
+
+      {/* ── 4. MODEL EVIDENCE — SATELLITE + GRAD-CAM ────────── */}
+      <div style={{ borderBottom: '1px solid var(--border)' }}>
+        <div
+          style={{
+            padding: '11px 28px',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <span className="label">Model Evidence</span>
+        </div>
+        <EvidenceViewer
+          gradcam={evidenceData}
+          metadata={{
+            timestamp:     metadata?.timestamp,
+            channel_label: metadata?.source,
+          }}
+          loading={gcLoading}
+        />
+      </div>
+
     </main>
   );
 }

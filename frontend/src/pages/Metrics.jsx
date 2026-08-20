@@ -1,8 +1,17 @@
 /**
- * Metrics.jsx — Redesigned as a clean data report.
- * No card tiles. Overall metrics in a flat table row.
- * Per-class as a proper data table. Confusion matrix full-width.
- * Radar chart retained — it communicates multi-dimensional profile efficiently.
+ * Metrics.jsx — Model Performance page
+ *
+ * Layout:
+ * ┌──────────────────────────────────────────────────────┐
+ * │ PAGE HEADER                                          │
+ * ├──────────────────────────────────────────────────────┤
+ * │ OVERALL METRICS (5-metric strip, full width)        │
+ * ├────────────────────────┬─────────────────────────────┤
+ * │ PERFORMANCE PROFILE    │ PER-CLASS BREAKDOWN          │
+ * │ (Radar chart)          │ (data table)                 │
+ * ├────────────────────────┴─────────────────────────────┤
+ * │ CONFUSION MATRIX (full width, large)                 │
+ * └──────────────────────────────────────────────────────┘
  */
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
@@ -14,8 +23,9 @@ import ConfusionMatrix      from '../components/ConfusionMatrix.jsx';
 import LoadingState         from '../components/LoadingState.jsx';
 import ErrorState           from '../components/ErrorState.jsx';
 import EmptyState           from '../components/EmptyState.jsx';
+import PageHeader           from '../components/PageHeader.jsx';
 
-/* ── Overall metrics — flat inline strip ─────────────────── */
+/* ── Overall metrics strip ───────────────────────────────── */
 function OverallStrip({ overall }) {
   if (!overall) return null;
   const items = [
@@ -35,26 +45,24 @@ function OverallStrip({ overall }) {
     >
       {items.map(({ key, label }, i) => {
         const val = overall[key];
+        const numStr = val != null ? (val * 100).toFixed(1) + '%' : '—';
         return (
           <div
             key={key}
             style={{
               flex: 1,
-              padding: '20px 24px',
+              padding: '24px 24px 22px',
               borderRight: i < items.length - 1 ? '1px solid var(--border)' : 'none',
             }}
           >
-            <p className="label" style={{ marginBottom: 6 }}>{label}</p>
+            <p className="metric-label">{label}</p>
             <span
-              className="mono"
+              className="metric-value"
               style={{
-                fontSize: '28px',
-                fontWeight: 300,
                 color: val != null ? 'var(--text-primary)' : 'var(--text-dim)',
-                letterSpacing: '-0.02em',
               }}
             >
-              {val != null ? (val * 100).toFixed(1) + '%' : '—'}
+              {numStr}
             </span>
           </div>
         );
@@ -63,7 +71,7 @@ function OverallStrip({ overall }) {
   );
 }
 
-/* ── Per-class breakdown table ───────────────────────────── */
+/* ── Per-class breakdown table ──────────────────────────── */
 function PerClassTable({ perClass }) {
   if (!perClass) return null;
   const rows = [
@@ -100,7 +108,7 @@ function PerClassTable({ perClass }) {
   );
 }
 
-/* ── Radar ───────────────────────────────────────────────── */
+/* ── Radar chart ───────────────────────────────────────── */
 function PerformanceRadar({ overall }) {
   if (!overall) return null;
   const radarData = [
@@ -112,29 +120,35 @@ function PerformanceRadar({ overall }) {
   ].filter((d) => d.value != null);
 
   return (
-    <div style={{ width: '100%', height: 220 }}>
+    <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer>
-        <RadarChart data={radarData} margin={{ top: 10, right: 28, bottom: 10, left: 28 }}>
-          <PolarGrid stroke="rgba(255,255,255,0.06)" />
+        <RadarChart data={radarData} margin={{ top: 12, right: 32, bottom: 12, left: 32 }}>
+          <PolarGrid stroke="rgba(255,255,255,0.055)" />
           <PolarAngleAxis
             dataKey="metric"
-            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+            tick={{
+              fill: 'var(--text-muted)',
+              fontSize: 10,
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.04em',
+            }}
           />
           <Radar
             name="Score"
             dataKey="value"
             stroke="var(--accent)"
             fill="var(--accent)"
-            fillOpacity={0.12}
+            fillOpacity={0.10}
             dot={{ r: 2, fill: 'var(--accent)' }}
           />
           <ReTooltip
             formatter={(v) => [(v * 100).toFixed(1) + '%', 'Score']}
             contentStyle={{
-              background: 'var(--bg-raised)',
+              background: 'var(--bg-overlay)',
               border: '1px solid var(--border-mid)',
               fontSize: 12,
               borderRadius: 2,
+              fontFamily: 'var(--font-sans)',
             }}
             labelStyle={{ color: 'var(--text-primary)' }}
           />
@@ -144,19 +158,23 @@ function PerformanceRadar({ overall }) {
   );
 }
 
-/* ── Section heading inside the page ─────────────────────── */
-function SecHead({ children }) {
+/* ── Section label ──────────────────────────────────────── */
+function SectionLabel({ children, right }) {
   return (
-    <p
-      className="label"
+    <div
       style={{
-        padding: '16px 28px 12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '11px 28px',
         borderBottom: '1px solid var(--border)',
-        margin: 0,
       }}
     >
-      {children}
-    </p>
+      <span className="label">{children}</span>
+      {right && (
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{right}</span>
+      )}
+    </div>
   );
 }
 
@@ -164,29 +182,21 @@ function SecHead({ children }) {
 export default function Metrics() {
   const { data, loading, error } = useMetrics();
 
+  /* Evaluation context string for subtitle */
+  const subText = data?.evaluated_at
+    ? `Evaluated ${new Date(data.evaluated_at).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+      })}${data.evaluation_set ? ` · ${data.evaluation_set}` : ''}`
+    : 'Evaluation results from the trained 3D-CNN';
+
   return (
-    <main
-      className="animate-fade-in"
-      style={{ maxWidth: 1400, margin: '0 auto' }}
-    >
-      {/* Page heading */}
-      <div style={{ padding: '20px 28px 14px', borderBottom: '1px solid var(--border)' }}>
-        <h1
-          style={{
-            fontSize: '18px',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            margin: '0 0 4px',
-            letterSpacing: '-0.01em',
-          }}
-        >
-          Model Performance
-        </h1>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
-          Evaluation results from the trained 3D-CNN on the held-out test set.
-          All figures are provided directly by the ML pipeline — no fabricated values.
-        </p>
-      </div>
+    <main className="animate-fade-in">
+
+      {/* Page header */}
+      <PageHeader
+        page="Model Performance"
+        sub={subText}
+      />
 
       {loading && (
         <div style={{ padding: '40px 28px' }}>
@@ -210,52 +220,57 @@ export default function Metrics() {
 
       {data?.available && (
         <div className="animate-fade-in">
-          {/* Context */}
-          {(data.evaluation_set || data.evaluated_at) && (
-            <div style={{ padding: '8px 28px', borderBottom: '1px solid var(--border)' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-                {data.evaluation_set}
-                {data.evaluated_at && (
-                  <> · Evaluated {new Date(data.evaluated_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</>
-                )}
-              </span>
-            </div>
-          )}
 
-          {/* Overall strip */}
-          <OverallStrip overall={data.overall} />
+          {/* ── Overall metrics strip ─── */}
+          <div style={{ borderBottom: '1px solid var(--border)' }}>
+            <SectionLabel>Overall Performance</SectionLabel>
+            <OverallStrip overall={data.overall} />
+          </div>
 
-          {/* Radar + per-class side by side */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderBottom: '1px solid var(--border)' }}>
+          {/* ── Radar + Per-class side by side ─── */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
             <div style={{ borderRight: '1px solid var(--border)' }}>
-              <SecHead>Performance Profile</SecHead>
-              <div style={{ padding: '0 24px 24px' }}>
+              <SectionLabel>Performance Profile</SectionLabel>
+              <div style={{ padding: '16px 24px 24px' }}>
                 <PerformanceRadar overall={data.overall} />
               </div>
             </div>
             <div>
-              <SecHead>Per-Class Breakdown</SecHead>
+              <SectionLabel>Per-Class Breakdown</SectionLabel>
               <div style={{ padding: '0 0 24px' }}>
                 <PerClassTable perClass={data.per_class} />
               </div>
             </div>
           </div>
 
-          {/* Confusion matrix */}
-          <SecHead>Confusion Matrix</SecHead>
-          <div style={{ padding: '0 28px 40px' }}>
-            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: 20, marginTop: 12 }}>
-              Rows = actual class · Columns = predicted class
-            </p>
-            {data.confusion_matrix ? (
-              <ConfusionMatrix
-                matrix={data.confusion_matrix.matrix}
-                labels={data.confusion_matrix.labels}
-              />
-            ) : (
-              <EmptyState title="Confusion matrix unavailable" body="Not provided by the evaluation pipeline." />
-            )}
+          {/* ── Confusion matrix full-width ─── */}
+          <div style={{ borderBottom: '1px solid var(--border)' }}>
+            <SectionLabel
+              right="Rows = actual class · Columns = predicted class"
+            >
+              Confusion Matrix
+            </SectionLabel>
+            <div style={{ padding: '24px 28px 40px' }}>
+              {data.confusion_matrix ? (
+                <ConfusionMatrix
+                  matrix={data.confusion_matrix.matrix}
+                  labels={data.confusion_matrix.labels}
+                />
+              ) : (
+                <EmptyState
+                  title="Confusion matrix unavailable"
+                  body="Not provided by the evaluation pipeline."
+                />
+              )}
+            </div>
           </div>
+
         </div>
       )}
     </main>

@@ -1,16 +1,16 @@
 /**
  * EvidenceViewer.jsx
- * Unified visual evidence centerpiece: Satellite | Heatmap | Overlay
- * Consolidates satellite imagery and Grad-CAM into a single tabbed
- * image panel that dominates the right column of the Dashboard.
+ * Unified satellite evidence panel: Satellite | Grad-CAM | Overlay
+ * Single tabbed viewer. Tabs use bottom-border active state.
+ * Section header above tabs. Smooth opacity transition between views.
  *
  * Props:
  *   gradcam     — gradcam data object from API
- *   metadata    — prediction metadata (timestamp, location, channel_label)
+ *   metadata    — prediction metadata (timestamp, channel_label)
  *   loading     — boolean
  *
  * Contract:
- *   gradcam.original_url — satellite image (same source as SatelliteViewer)
+ *   gradcam.original_url — satellite image
  *   gradcam.heatmap_url  — Grad-CAM heatmap
  *   gradcam.overlay_url  — heatmap overlaid on satellite
  *   gradcam.available    — boolean
@@ -32,43 +32,44 @@ const MODES = [
     id:    'heatmap',
     label: 'Grad-CAM',
     key:   'heatmap_url',
-    desc:  'Class activation map (Grad-CAM). Spatial regions weighted by their gradient contribution to the final classification.',
-    note:  'Warmer colour indicates stronger model attention.',
+    desc:  'Class activation map (Grad-CAM). Spatial regions weighted by gradient contribution to final classification.',
+    note:  'Warmer colour = stronger model attention.',
     showScale: true,
   },
   {
     id:    'overlay',
     label: 'Overlay',
     key:   'overlay_url',
-    desc:  'Grad-CAM attention superimposed on the original satellite observation. α = 0.55.',
-    note:  'Warmer colour indicates stronger model attention.',
+    desc:  'Grad-CAM attention superimposed on the original satellite observation (α = 0.55).',
+    note:  'Warmer colour = stronger model attention.',
     showScale: true,
   },
 ];
 
-/* ── Thermal scale legend — rendered only for heatmap/overlay ── */
+/* ── Thermal scale legend ───────────────────────────────────── */
 function GradCAMScale() {
   return (
     <div
       style={{
-        padding: '8px 12px 7px',
+        padding: '7px 16px',
         borderBottom: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 4,
+        gap: '4px',
+        background: 'var(--bg-surface)',
       }}
     >
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginBottom: 3,
+          marginBottom: '3px',
         }}
       >
-        <span style={{ fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
           Low attention
         </span>
-        <span style={{ fontSize: '9px', color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
           High attention
         </span>
       </div>
@@ -80,6 +81,7 @@ function GradCAMScale() {
 export default function EvidenceViewer({ gradcam, metadata, loading }) {
   const [mode, setMode]         = useState('overlay');
   const [imgError, setImgError] = useState(false);
+  const [imgVisible, setImgVisible] = useState(true);
 
   if (loading) {
     return (
@@ -101,6 +103,15 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
   const currentMode = MODES.find((m) => m.id === mode);
   const imgUrl = gradcam[currentMode.key];
 
+  const handleTabChange = (id) => {
+    setImgVisible(false);
+    setImgError(false);
+    setTimeout(() => {
+      setMode(id);
+      setImgVisible(true);
+    }, 80);
+  };
+
   return (
     <div className="animate-fade-in">
       {/* ── Tab bar ─────────────────────────────────────────── */}
@@ -109,8 +120,9 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         aria-label="Evidence display mode"
         style={{
           display: 'flex',
-          background: 'var(--bg-raised)',
+          background: 'var(--bg-surface)',
           borderBottom: '1px solid var(--border)',
+          paddingLeft: '4px',
         }}
       >
         {MODES.map(({ id, label }) => (
@@ -118,7 +130,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
             key={id}
             role="tab"
             aria-selected={mode === id}
-            onClick={() => { setMode(id); setImgError(false); }}
+            onClick={() => handleTabChange(id)}
             className={`ev-tab ${mode === id ? 'active' : ''}`}
           >
             {label}
@@ -126,7 +138,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         ))}
       </div>
 
-      {/* ── Grad-CAM color scale (heatmap + overlay only) ──── */}
+      {/* ── Grad-CAM color scale ─────────────────────────────── */}
       {currentMode.showScale && <GradCAMScale />}
 
       {/* ── Image panel ─────────────────────────────────────── */}
@@ -136,6 +148,7 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
           position: 'relative',
           background: '#030810',
           lineHeight: 0,
+          minHeight: '280px',
         }}
       >
         {imgUrl && !imgError ? (
@@ -145,17 +158,20 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
             alt={currentMode.desc}
             style={{
               width: '100%',
-              maxHeight: 480,
-              minHeight: 200,
-              objectFit: 'cover',
+              maxHeight: 420,
+              minHeight: '220px',
+              objectFit: 'contain',
               display: 'block',
+              opacity: imgVisible ? 1 : 0,
+              transition: 'opacity 0.15s ease',
             }}
             onError={() => setImgError(true)}
+            onLoad={() => setImgVisible(true)}
           />
         ) : (
           <div
             style={{
-              height: 320,
+              height: 280,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -168,30 +184,31 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
           </div>
         )}
 
-        {/* ── Image metadata strip ─────────────────────────── */}
+        {/* ── Image metadata overlay ─────────────────────────── */}
         <div
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            padding: '5px 10px',
-            background: 'rgba(3,8,16,0.85)',
+            padding: '6px 12px',
+            background: 'rgba(3,8,16,0.82)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            lineHeight: 1,
           }}
         >
           <span
             className="mono"
-            style={{ fontSize: '10px', color: 'rgba(255,255,255,0.40)', letterSpacing: '0.06em' }}
+            style={{ fontSize: '10px', color: 'rgba(255,255,255,0.38)', letterSpacing: '0.06em' }}
           >
             {metadata?.channel_label || 'INSAT-3DR'}
           </span>
           {metadata?.timestamp && (
             <span
               className="mono"
-              style={{ fontSize: '10px', color: 'rgba(255,255,255,0.28)', letterSpacing: '0.04em' }}
+              style={{ fontSize: '10px', color: 'rgba(255,255,255,0.26)', letterSpacing: '0.04em' }}
             >
               {new Date(metadata.timestamp).toISOString().replace('T', ' ').slice(0, 16)} UTC
             </span>
@@ -199,14 +216,15 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
         </div>
       </div>
 
-      {/* ── Caption + methodology note ───────────────────────── */}
+      {/* ── Caption ─────────────────────────────────────────── */}
       <div
         style={{
           borderTop: '1px solid var(--border)',
-          padding: '8px 12px',
+          padding: '9px 16px',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
+          gap: '3px',
+          background: 'var(--bg-surface)',
         }}
       >
         <p

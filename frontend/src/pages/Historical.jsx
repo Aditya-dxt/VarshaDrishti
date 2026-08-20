@@ -1,13 +1,23 @@
 /**
- * Historical.jsx — Redesigned as flat, editorial layout.
- * Sidebar: plain event list with dividers, not rounded cards.
- * Main panel: structured analysis results without card containers.
+ * Historical.jsx — Historical Replay page
+ *
+ * Master-detail layout:
+ * ┌──────────────────┬─────────────────────────────────────┐
+ * │ EVENT LIST       │ EVENT DETAIL                        │
+ * │                  │                                     │
+ * │ ● Bihar Flood    │   Risk / Map / Evidence / Explain   │
+ * │   Monsoon Mumbai │                                     │
+ * │   Cyclone …      │   or: empty state                  │
+ * └──────────────────┴─────────────────────────────────────┘
+ *
+ * Clicking an event highlights it and triggers replay automatically.
  */
 import { useState } from 'react';
-import { Play } from 'lucide-react';
+import { Play, MapPin, Calendar, Activity } from 'lucide-react';
 import { useHistoricalList, useHistoricalEvent } from '../hooks/useHistorical.js';
 import { getRiskMeta, formatTimestamp } from '../utils/riskHelpers.js';
 
+import PageHeader       from '../components/PageHeader.jsx';
 import RiskCard         from '../components/RiskCard.jsx';
 import ProbabilityChart from '../components/ProbabilityChart.jsx';
 import GradCAMViewer    from '../components/GradCAMViewer.jsx';
@@ -17,9 +27,16 @@ import LoadingState     from '../components/LoadingState.jsx';
 import ErrorState       from '../components/ErrorState.jsx';
 import EmptyState       from '../components/EmptyState.jsx';
 
-/* ── Event row in sidebar ─────────────────────────────────── */
+/* ── Event row in sidebar list ──────────────────────────────── */
 function EventRow({ event, selected, onSelect }) {
   const meta = getRiskMeta(event.type);
+  const badgeClass =
+    event.type === 'no_rain'
+      ? 'risk-badge-none'
+      : event.type === 'high_impact'
+        ? 'risk-badge-impact'
+        : `risk-badge-${event.type}`;
+
   return (
     <button
       onClick={() => onSelect(event)}
@@ -28,30 +45,100 @@ function EventRow({ event, selected, onSelect }) {
         display: 'block',
         width: '100%',
         textAlign: 'left',
-        padding: '14px 20px',
-        background: selected ? 'var(--bg-raised)' : 'transparent',
-        borderLeft: `3px solid ${selected ? meta.dotColor : 'transparent'}`,
+        padding: '14px 16px',
+        background: selected ? 'var(--nav-active-bg)' : 'transparent',
+        borderLeft: `2px solid ${selected ? meta.dotColor : 'transparent'}`,
         border: 'none',
         borderBottom: '1px solid var(--border)',
+        borderLeftWidth: '2px',
+        borderLeftStyle: 'solid',
+        borderLeftColor: selected ? meta.dotColor : 'transparent',
         cursor: 'pointer',
-        transition: 'background 0.12s',
+        transition: 'background 0.15s, border-color 0.15s',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
+      {/* Name + badge */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: '8px',
+          marginBottom: '6px',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '13px',
+            fontWeight: selected ? 600 : 500,
+            color: selected ? 'var(--text-primary)' : 'var(--text-secondary)',
+            lineHeight: 1.3,
+            transition: 'color 0.15s',
+          }}
+        >
           {event.name}
         </span>
-        <span className={`risk-badge-${event.type === 'no_rain' ? 'none' : event.type === 'high_impact' ? 'impact' : event.type}`}
-          style={{ fontSize: '10px', padding: '2px 7px', letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>
+        <span
+          className={badgeClass}
+          style={{
+            fontSize: '9px',
+            padding: '2px 7px',
+            letterSpacing: '0.05em',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            fontWeight: 600,
+            textTransform: 'uppercase',
+          }}
+        >
           {meta.shortLabel}
         </span>
       </div>
-      <div style={{ display: 'flex', gap: 12 }}>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{event.date}</span>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{event.location?.split(',')[0]}</span>
+
+      {/* Date + location */}
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '11px',
+            color: 'var(--text-muted)',
+          }}
+        >
+          <Calendar size={10} />
+          {event.date}
+        </span>
+        {event.location && (
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+            }}
+          >
+            <MapPin size={10} />
+            {event.location.split(',')[0]}
+          </span>
+        )}
       </div>
+
+      {/* Description preview */}
       {event.description && (
-        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: 5, lineHeight: 1.5, marginBottom: 0 }}>
+        <p
+          style={{
+            fontSize: '11px',
+            color: selected ? 'var(--text-secondary)' : 'var(--text-muted)',
+            marginTop: '6px',
+            marginBottom: 0,
+            lineHeight: 1.5,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
           {event.description}
         </p>
       )}
@@ -59,85 +146,211 @@ function EventRow({ event, selected, onSelect }) {
   );
 }
 
-/* ── Section label ─────────────────────────────────────────── */
-function SLabel({ children }) {
-  return (
-    <p
-      className="label"
-      style={{
-        padding: '14px 24px 10px',
-        borderBottom: '1px solid var(--border)',
-        margin: 0,
-      }}
-    >
-      {children}
-    </p>
-  );
-}
+/* ── Event detail panel ────────────────────────────────────── */
+function DetailPanel({ event, result, loading, error, onReplay, replayLoading }) {
+  /* Nothing selected */
+  if (!event) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          minHeight: '60vh',
+          padding: '40px 24px',
+          textAlign: 'center',
+        }}
+      >
+        <Activity
+          size={32}
+          style={{ color: 'var(--text-dim)', marginBottom: '16px' }}
+        />
+        <p
+          style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            color: 'var(--text-secondary)',
+            margin: '0 0 8px',
+          }}
+        >
+          Select an event
+        </p>
+        <p
+          style={{
+            fontSize: '12px',
+            color: 'var(--text-muted)',
+            maxWidth: 300,
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          Choose a historical event from the list to inspect its prediction and explanation.
+        </p>
+      </div>
+    );
+  }
 
-/* ── Replay results ───────────────────────────────────────── */
-function ReplayPanel({ result, loading, error }) {
+  /* Loading replay */
   if (loading) {
     return (
-      <div style={{ padding: '40px 24px' }}>
+      <div style={{ padding: '40px 28px' }}>
         <LoadingState label="Running model prediction on historical observation…" lines={7} />
       </div>
     );
   }
-  if (error) return <div style={{ padding: 24 }}><ErrorState message={error} /></div>;
-  if (!result) {
+
+  /* Replay error */
+  if (error) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
-        <EmptyState
-          title="Select an event to begin"
-          body="Choose a historical event from the panel on the left, then press Replay to run the model and view results."
-        />
+      <div style={{ padding: '28px' }}>
+        <ErrorState message={error} onRetry={() => onReplay(event.id)} />
       </div>
     );
   }
 
+  /* Event selected, no replay yet */
+  if (!result) {
+    const meta = getRiskMeta(event.type);
+    return (
+      <div className="animate-fade-in">
+        {/* Event overview */}
+        <div
+          style={{
+            padding: '24px 28px',
+            borderBottom: '1px solid var(--border)',
+            borderLeft: `2px solid ${meta.dotColor}`,
+          }}
+        >
+          <div style={{ marginBottom: '12px' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '11px',
+                color: 'var(--text-muted)',
+                marginBottom: '8px',
+              }}
+            >
+              <Calendar size={11} /> {event.date}
+              {event.location && <>&nbsp;&nbsp;<MapPin size={11} /> {event.location}</>}
+            </span>
+            <h2
+              style={{
+                fontSize: '22px',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                margin: 0,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {event.name}
+            </h2>
+          </div>
+          {event.description && (
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 20px', lineHeight: 1.6 }}>
+              {event.description}
+            </p>
+          )}
+          <button
+            onClick={() => onReplay(event.id)}
+            disabled={replayLoading}
+            className="btn btn-primary"
+          >
+            {replayLoading ? (
+              <span
+                className="animate-spin-slow"
+                style={{
+                  display: 'inline-block',
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  border: '1px solid var(--text-muted)',
+                  borderTopColor: 'var(--accent)',
+                }}
+              />
+            ) : (
+              <Play size={11} />
+            )}
+            {replayLoading ? 'Running…' : 'Replay This Event'}
+          </button>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '40vh',
+            padding: '40px 28px',
+          }}
+        >
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>
+            Press "Replay This Event" to run the full prediction and explanation pipeline.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Full replay result ── */
   const { prediction, probabilities, xai, metadata } = result;
+
+  const SectionLabel = ({ children }) => (
+    <div
+      style={{
+        padding: '11px 28px',
+        borderBottom: '1px solid var(--border)',
+      }}
+    >
+      <span className="label">{children}</span>
+    </div>
+  );
 
   return (
     <div className="animate-fade-in">
-      {/* Risk */}
-      <RiskCard prediction={prediction} metadata={metadata} />
 
-      {/* Map + Evidence 2-col */}
+      {/* Risk */}
+      <div style={{ borderBottom: '1px solid var(--border)' }}>
+        <SectionLabel>Prediction Result</SectionLabel>
+        <RiskCard prediction={prediction} metadata={metadata} compact />
+      </div>
+
+      {/* Map */}
+      <div style={{ borderBottom: '1px solid var(--border)' }}>
+        <SectionLabel>Impact Location</SectionLabel>
+        <RiskMap metadata={metadata} prediction={prediction} height={260} />
+      </div>
+
+      {/* Probability + SHAP side-by-side */}
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          borderTop: '1px solid var(--border)',
+          borderBottom: '1px solid var(--border)',
         }}
       >
         <div style={{ borderRight: '1px solid var(--border)' }}>
-          <SLabel>Impact Location</SLabel>
-          <RiskMap metadata={metadata} prediction={prediction} height={260} />
+          <SectionLabel>Probability Distribution</SectionLabel>
+          <div style={{ padding: '20px 28px 24px' }}>
+            <ProbabilityChart probabilities={probabilities} />
+          </div>
         </div>
         <div>
-          <SLabel>Model Attention — Grad-CAM</SLabel>
-          <div style={{ padding: '0 20px 20px' }}>
-            <GradCAMViewer gradcam={xai?.gradcam} loading={false} />
+          <SectionLabel>Feature Contributions</SectionLabel>
+          <div style={{ padding: '16px 28px 24px' }}>
+            <SHAPChart shap={xai?.shap} loading={false} />
           </div>
         </div>
       </div>
 
-      {/* Probability + SHAP */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          borderTop: '1px solid var(--border)',
-        }}
-      >
-        <div style={{ borderRight: '1px solid var(--border)', padding: '0 24px 24px' }}>
-          <p className="label" style={{ padding: '14px 0 10px' }}>Probability Distribution</p>
-          <ProbabilityChart probabilities={probabilities} />
-        </div>
-        <div style={{ padding: '0 24px 24px' }}>
-          <p className="label" style={{ padding: '14px 0 10px' }}>Feature Contributions</p>
-          <SHAPChart shap={xai?.shap} loading={false} />
+      {/* Grad-CAM */}
+      <div>
+        <SectionLabel>Model Attention — Grad-CAM</SectionLabel>
+        <div style={{ padding: '0 28px 28px' }}>
+          <GradCAMViewer gradcam={xai?.gradcam} loading={false} />
         </div>
       </div>
     </div>
@@ -150,93 +363,103 @@ export default function Historical() {
   const { data: result, loading: replayLoading, error: replayError, replay } = useHistoricalEvent();
   const [selected, setSelected] = useState(null);
 
-  const handleReplay = () => { if (selected) replay(selected.id); };
+  const handleSelect = (event) => {
+    setSelected(event);
+    // Auto-replay on selection for immediate feedback
+    replay(event.id);
+  };
+
+  const handleReplay = (id) => {
+    replay(id);
+  };
+
+  const eventCount = listData?.events?.length;
 
   return (
     <main
       className="animate-fade-in"
-      style={{ maxWidth: 1400, margin: '0 auto' }}
+      style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}
     >
-      {/* Page heading */}
-      <div style={{ padding: '20px 28px 16px', borderBottom: '1px solid var(--border)' }}>
-        <h1 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
-          Historical Replay
-        </h1>
-        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
-          Run the full prediction and explanation pipeline on documented extreme-rainfall events.
-        </p>
-      </div>
+      {/* Page header */}
+      <PageHeader
+        page="Historical Events"
+        sub={
+          eventCount != null
+            ? `${eventCount} documented extreme-rainfall event${eventCount !== 1 ? 's' : ''}`
+            : 'Historical prediction replay'
+        }
+      />
 
-      <div style={{ display: 'flex', minHeight: '75vh' }}>
-        {/* ── Sidebar ── */}
+      {/* Master-detail body */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+
+        {/* ── Event list sidebar ── */}
         <aside
           style={{
-            width: 280,
+            width: '280px',
             flexShrink: 0,
             borderRight: '1px solid var(--border)',
             display: 'flex',
             flexDirection: 'column',
+            overflowY: 'auto',
           }}
         >
-          <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)' }}>
+          <div
+            style={{
+              padding: '11px 16px',
+              borderBottom: '1px solid var(--border)',
+              background: 'var(--bg-surface)',
+              position: 'sticky',
+              top: 0,
+              zIndex: 5,
+            }}
+          >
             <span className="label">Available Events</span>
           </div>
 
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            {listLoading && <div style={{ padding: 20 }}><LoadingState label="Loading events…" lines={4} /></div>}
-            {listError   && <div style={{ padding: 20 }}><ErrorState message={listError} /></div>}
-            {!listLoading && !listError && !listData?.events?.length && (
-              <EmptyState title="No events available" body="Historical events have not been provided by the backend." />
-            )}
-            {listData?.events?.map((event) => (
-              <EventRow
-                key={event.id}
-                event={event}
-                selected={selected?.id === event.id}
-                onSelect={setSelected}
-              />
-            ))}
-          </div>
-
-          {/* Replay CTA */}
-          {selected && (
-            <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
-              <button
-                onClick={handleReplay}
-                disabled={replayLoading}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  padding: '10px 0',
-                  background: 'var(--bg-raised)',
-                  border: '1px solid var(--border-mid)',
-                  color: 'var(--text-primary)',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  letterSpacing: '0.06em',
-                  cursor: replayLoading ? 'not-allowed' : 'pointer',
-                  opacity: replayLoading ? 0.55 : 1,
-                  transition: 'border-color 0.15s',
-                }}
-              >
-                {replayLoading ? (
-                  <span
-                    className="animate-spin-slow"
-                    style={{ display: 'inline-block', width: 13, height: 13, borderRadius: '50%', border: '1px solid var(--text-muted)', borderTopColor: 'var(--text-primary)' }}
-                  />
-                ) : <Play size={12} />}
-                {replayLoading ? 'RUNNING…' : 'REPLAY EVENT'}
-              </button>
+          {listLoading && (
+            <div style={{ padding: '20px 16px' }}>
+              <LoadingState label="Loading events…" lines={4} />
             </div>
           )}
+          {listError && (
+            <div style={{ padding: '20px 16px' }}>
+              <ErrorState message={listError} />
+            </div>
+          )}
+          {!listLoading && !listError && !listData?.events?.length && (
+            <EmptyState
+              title="No events available"
+              body="Historical events have not been provided by the backend."
+            />
+          )}
+
+          {listData?.events?.map((event) => (
+            <EventRow
+              key={event.id}
+              event={event}
+              selected={selected?.id === event.id}
+              onSelect={handleSelect}
+            />
+          ))}
         </aside>
 
-        {/* ── Main content ── */}
-        <div style={{ flex: 1, minWidth: 0, overflowY: 'auto' }}>
-          <ReplayPanel result={result} loading={replayLoading} error={replayError} />
+        {/* ── Detail panel ── */}
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            overflowY: 'auto',
+          }}
+        >
+          <DetailPanel
+            event={selected}
+            result={result}
+            loading={replayLoading}
+            error={replayError}
+            onReplay={handleReplay}
+            replayLoading={replayLoading}
+          />
         </div>
       </div>
     </main>

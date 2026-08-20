@@ -1,81 +1,92 @@
 /**
  * ProbabilityChart.jsx
- * Flat horizontal bar chart. No rounded caps. Grid removed.
- * Risk colours map correctly to rainfall severity only.
+ * Clean pure-CSS horizontal bar chart. No Recharts dependency.
+ * Semantic color only on the highest-risk class.
+ * All other classes remain neutral.
+ *
+ * Props:
+ *   probabilities — { no_rain, moderate, heavy, high_impact } (0–1 values)
  */
-import {
-  BarChart, Bar, XAxis, YAxis,
-  Tooltip, ResponsiveContainer, Cell,
-} from 'recharts';
 import { getRiskMeta } from '../utils/riskHelpers.js';
 
 const CLASS_ORDER = ['no_rain', 'moderate', 'heavy', 'high_impact'];
-
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  const { name, value } = payload[0].payload;
-  const meta = getRiskMeta(name);
-  return (
-    <div
-      style={{
-        background: 'var(--bg-raised)',
-        border: '1px solid var(--border-mid)',
-        padding: '8px 12px',
-        fontSize: '12px',
-      }}
-    >
-      <p style={{ color: meta.dotColor, fontWeight: 600, margin: '0 0 2px' }}>{meta.label}</p>
-      <p style={{ color: 'var(--text-secondary)', margin: 0 }}>
-        {(value * 100).toFixed(1)}%
-      </p>
-    </div>
-  );
-};
 
 export default function ProbabilityChart({ probabilities }) {
   if (!probabilities) return null;
 
   const data = CLASS_ORDER.map((key) => ({
-    name:  key,
+    key,
     label: getRiskMeta(key).shortLabel,
     value: probabilities[key] ?? 0,
+    meta: getRiskMeta(key),
   }));
 
+  // Find the highest probability class to highlight
+  const maxKey = data.reduce((a, b) => (b.value > a.value ? b : a)).key;
+
   return (
-    <div style={{ width: '100%', height: 160 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          layout="vertical"
-          margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
-        >
-          <XAxis
-            type="number"
-            domain={[0, 1]}
-            tickFormatter={(v) => `${Math.round(v * 100)}%`}
-            tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            type="category"
-            dataKey="label"
-            width={72}
-            tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip
-            content={<CustomTooltip />}
-            cursor={{ fill: 'rgba(255,255,255,0.02)' }}
-          />
-          <Bar dataKey="value" radius={0} maxBarSize={14}>
-            {data.map((entry) => (
-              <Cell key={entry.name} fill={getRiskMeta(entry.name).barColor} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {data.map(({ key, label, value, meta }) => {
+        const pct = (value * 100).toFixed(1);
+        const isMax = key === maxKey;
+        const barColor = isMax ? meta.dotColor : 'rgba(255,255,255,0.08)';
+        const labelColor = isMax ? meta.dotColor : 'var(--text-secondary)';
+        const pctColor = isMax ? 'var(--text-primary)' : 'var(--text-muted)';
+
+        return (
+          <div key={key} title={`${label}: ${pct}%`}>
+            {/* Label row */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                marginBottom: '5px',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '12px',
+                  color: labelColor,
+                  fontWeight: isMax ? 500 : 400,
+                  transition: 'color 0.2s',
+                }}
+              >
+                {label}
+              </span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '12px',
+                  color: pctColor,
+                  fontWeight: isMax ? 600 : 400,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                {pct}%
+              </span>
+            </div>
+            {/* Bar track */}
+            <div
+              style={{
+                height: '3px',
+                background: 'var(--bg-overlay)',
+                width: '100%',
+                borderRadius: 0,
+              }}
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${value * 100}%`,
+                  background: barColor,
+                  transition: 'width 0.5s ease, background 0.3s',
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

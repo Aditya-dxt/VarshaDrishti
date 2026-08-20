@@ -1,68 +1,101 @@
 @import "tailwindcss";
 
 /* ════════════════════════════════════════════════════════════
-   BHOOMIDRISHTI — Scientific Monitoring Console
-   Design language: flat, restrained, typography-led.
+   BHOOMIDRISHTI — Premium Meteorological Intelligence Console
+   Design language: scientific · restrained · precise · legible
+   Typography-led hierarchy. Color communicates meaning only.
    No glows. No gradients. No excessive rounding.
-   Color communicates meaning, not decoration.
    ════════════════════════════════════════════════════════════ */
 
-:root {
-  /* ── Surfaces ─────────────────────────────────────────────
-     Atmospheric navy, not sci-fi black.
-     Subtle depth through brightness, not shadows or glow. */
-  --bg-base:     #080e1a;  /* page ground */
-  --bg-surface:  #0d1422;  /* primary surface */
-  --bg-raised:   #111827;  /* slightly elevated surface */
-  --bg-input:    #0f1520;
+@layer base {
+  :root {
+    /* ── Surfaces ──────────────────────────────────────────────
+       Atmospheric navy. Readable, not sci-fi dark.
+       Each step adds ~7-8 lightness units. */
+    --bg-base:      #070B12;   /* page ground */
+    --bg-surface:   #0D131C;   /* primary surface — cards, sidebar */
+    --bg-raised:    #121A24;   /* elevated surface — hover, inputs */
+    --bg-overlay:   #182030;   /* highest surface — dropdowns, tooltips */
+    --bg-input:     #0F1720;
 
-  /* ── Borders ──────────────────────────────────────────────
-     Flat 1px lines. No box shadows. */
-  --border:      rgba(255,255,255,0.07);
-  --border-mid:  rgba(255,255,255,0.11);
-  --border-strong: rgba(255,255,255,0.18);
+    /* ── Layout ────────────────────────────────────────────────*/
+    --sidebar-w:    240px;
+    --content-max:  1200px;
 
-  /* ── Typography ───────────────────────────────────────────
-     Restrained. White → slate hierarchy only. */
-  --text-primary:   #e8edf5;
-  --text-secondary: #8896a8;
-  --text-muted:     #4a5568;
-  --text-dim:       #2d3748;
+    /* ── Borders ───────────────────────────────────────────────
+       Flat 1px lines. No box shadows. */
+    --border:         rgba(255,255,255,0.065);
+    --border-mid:     rgba(255,255,255,0.10);
+    --border-strong:  rgba(255,255,255,0.16);
 
-  /* ── Accent ───────────────────────────────────────────────
-     Muted, cool blue-gray. Used sparingly for UI affordances.
-     NOT used as a brand colour or decorative element. */
-  --accent:      #7090b0;
-  --accent-soft: rgba(112,144,176,0.12);
+    /* ── Typography ────────────────────────────────────────────
+       Restrained hierarchy. Primary white → slate only. */
+    --text-primary:    #F1F5F9;   /* nearly white — headings, key numbers */
+    --text-secondary:  #A7B2C0;   /* slate — body, labels */
+    --text-muted:      #6F7C8C;   /* muted slate — captions, meta */
+    --text-dim:        #3E4E5E;   /* very muted — dividers, placeholders */
 
-  /* ── Rainfall severity — ONLY semantic use of colour ──────
-     Amber → Orange → Red strictly follows rainfall risk.
-     No other elements should use these colours. */
-  --risk-none:         #4b5563;  /* neutral gray — no signal */
-  --risk-moderate:     #d97706;  /* amber-600  */
-  --risk-heavy:        #ea580c;  /* orange-600 */
-  --risk-impact:       #dc2626;  /* red-600    */
+    /* ── Accent ────────────────────────────────────────────────
+       Cool blue-gray. UI affordances only — not decorative. */
+    --accent:          #6B8FAF;
+    --accent-soft:     rgba(107,143,175,0.12);
+    --accent-border:   rgba(107,143,175,0.25);
 
-  --risk-none-bg:      rgba(75,85,99,0.10);
-  --risk-moderate-bg:  rgba(217,119,6,0.10);
-  --risk-heavy-bg:     rgba(234,88,12,0.10);
-  --risk-impact-bg:    rgba(220,38,38,0.10);
+    /* ── Active nav indicator ──────────────────────────────────*/
+    --nav-active-bg:   rgba(107,143,175,0.08);
+    --nav-active-border: #6B8FAF;
 
-  --risk-none-border:     rgba(75,85,99,0.25);
-  --risk-moderate-border: rgba(217,119,6,0.30);
-  --risk-heavy-border:    rgba(234,88,12,0.30);
-  --risk-impact-border:   rgba(220,38,38,0.30);
+    /* ── Rainfall severity — SEMANTIC ONLY ────────────────────
+       These colors communicate risk level. Used nowhere else. */
+    --risk-none:          #4B5563;
+    --risk-moderate:      #D97706;
+    --risk-heavy:         #EA580C;
+    --risk-impact:        #DC2626;
 
-  /* ── Typography scale ─────────────────────────────────────*/
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --risk-none-bg:       rgba(75,85,99,0.10);
+    --risk-moderate-bg:   rgba(217,119,6,0.10);
+    --risk-heavy-bg:      rgba(234,88,12,0.10);
+    --risk-impact-bg:     rgba(220,38,38,0.10);
 
-  /* ── Spacing tokens ───────────────────────────────────────*/
-  --section-h-pad: 28px;  /* horizontal padding for major sections */
-  --section-v-pad: 14px;  /* top/bottom padding for section heads */
+    --risk-none-border:      rgba(75,85,99,0.22);
+    --risk-moderate-border:  rgba(217,119,6,0.28);
+    --risk-heavy-border:     rgba(234,88,12,0.28);
+    --risk-impact-border:    rgba(220,38,38,0.28);
+
+    /* ── Status semantics ──────────────────────────────────────*/
+    --status-ok:      #22C55E;
+    --status-warn:    #D97706;
+    --status-error:   #DC2626;
+
+    /* ── Typography ────────────────────────────────────────────*/
+    --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+
+    /* ── Spacing scale ─────────────────────────────────────────
+       4px base unit. Stick to this throughout. */
+    --sp-1:    4px;
+    --sp-2:    8px;
+    --sp-3:   12px;
+    --sp-4:   16px;
+    --sp-5:   20px;
+    --sp-6:   24px;
+    --sp-7:   28px;
+    --sp-8:   32px;
+    --sp-10:  40px;
+    --sp-12:  48px;
+
+    /* ── Transitions ───────────────────────────────────────────*/
+    --t-fast:    100ms ease;
+    --t-base:    180ms ease;
+    --t-slow:    280ms ease;
+
+    /* ── Legacy compat (keep existing component refs working) ──*/
+    --section-h-pad: var(--sp-7);
+    --section-v-pad: var(--sp-3);
+  }
 }
 
-/* ── Reset & Base ─────────────────────────────────────────── */
+/* ── Reset & Base ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -77,31 +110,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Scrollbar ────────────────────────────────────────────── */
+/* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
 
-/* ── Focus ────────────────────────────────────────────────── */
+/* ── Focus ──────────────────────────────────────────────────── */
 :focus-visible {
   outline: 1px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* ── Typography utilities ─────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+   ════════════════════════════════════════════════════════════ */
+
 .mono { font-family: var(--font-mono); }
 
-/* Overline / section label — all caps, tracked, muted */
+/* Overline / section label — uppercase, tracked, muted */
 .label {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-/* Coordinate display — monospace, slightly larger than label */
+/* Coordinate display */
 .coord {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -109,9 +145,27 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* ── Layout primitives ───────────────────────────────────────
-   Use dividers + spacing instead of cards.
-   Surface class for when a container IS needed. */
+/* ════════════════════════════════════════════════════════════
+   LAYOUT PRIMITIVES
+   ════════════════════════════════════════════════════════════ */
+
+/* App shell: sidebar + content */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Main content area — offset by sidebar */
+.app-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Surface containers */
 .surface {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -121,6 +175,11 @@ body {
   border: 1px solid var(--border);
 }
 
+/* Standard panel — border bottom divider sections */
+.panel {
+  border-bottom: 1px solid var(--border);
+}
+
 /* Thin horizontal rule */
 .rule {
   border: none;
@@ -128,10 +187,7 @@ body {
   margin: 0;
 }
 
-/* ── Section head ─────────────────────────────────────────────
-   Consistent overline label used in Dashboard + Historical.
-   Renders a label row with a border below it; section content
-   follows directly. */
+/* Section head row */
 .section-head {
   display: flex;
   align-items: center;
@@ -143,12 +199,166 @@ body {
   padding: var(--section-v-pad) 20px;
 }
 
-/* ── Leaflet ──────────────────────────────────────────────── */
+/* ── Content padding ────────────────────────────────────────── */
+.content-pad {
+  padding: 0 var(--sp-7);
+}
+
+/* ════════════════════════════════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════════════════════════════════ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--sp-3) 0;
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Nav item */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-5);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color var(--t-base), background var(--t-base), border-color var(--t-base);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+}
+.nav-item:hover {
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.025);
+}
+.nav-item.active {
+  color: var(--text-primary);
+  background: var(--nav-active-bg);
+  border-left-color: var(--nav-active-border);
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PAGE HEADER
+   ════════════════════════════════════════════════════════════ */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-4) var(--sp-7);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: var(--sp-4);
+}
+
+/* ════════════════════════════════════════════════════════════
+   METRICS / KEY NUMBERS
+   ════════════════════════════════════════════════════════════ */
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-1);
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RISK BADGES
+   ════════════════════════════════════════════════════════════ */
+
+.risk-badge-none     { color: var(--risk-none);     background: var(--risk-none-bg);     border: 1px solid var(--risk-none-border); }
+.risk-badge-moderate { color: var(--risk-moderate); background: var(--risk-moderate-bg); border: 1px solid var(--risk-moderate-border); }
+.risk-badge-heavy    { color: var(--risk-heavy);    background: var(--risk-heavy-bg);    border: 1px solid var(--risk-heavy-border); }
+.risk-badge-impact   { color: var(--risk-impact);   background: var(--risk-impact-bg);   border: 1px solid var(--risk-impact-border); }
+
+/* ════════════════════════════════════════════════════════════
+   EVIDENCE VIEWER TABS
+   ════════════════════════════════════════════════════════════ */
+
+.ev-tab {
+  padding: var(--sp-2) var(--sp-4) var(--sp-2);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--t-base), border-color var(--t-base);
+}
+.ev-tab:hover { color: var(--text-secondary); }
+.ev-tab.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+/* ════════════════════════════════════════════════════════════
+   DATA TABLE
+   ════════════════════════════════════════════════════════════ */
+
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th,
+.data-table td { padding: 10px 16px; text-align: left; }
+.data-table thead tr { border-bottom: 1px solid var(--border-mid); }
+.data-table tbody tr { border-bottom: 1px solid var(--border); }
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.09em; color: var(--text-muted); text-transform: uppercase; }
+.data-table td { font-size: 13px; color: var(--text-secondary); }
+
+/* ════════════════════════════════════════════════════════════
+   LEAFLET
+   ════════════════════════════════════════════════════════════ */
+
 .leaflet-container {
   background: #050b14 !important;
   font-family: var(--font-sans) !important;
 }
-.leaflet-tile-pane  { filter: brightness(0.52) saturate(0.30); }
+.leaflet-tile-pane  { filter: brightness(0.50) saturate(0.28); }
 .leaflet-control-attribution { display: none !important; }
 .leaflet-control-zoom {
   border: 1px solid var(--border) !important;
@@ -160,7 +370,7 @@ body {
   border-color: var(--border) !important;
   line-height: 26px !important;
 }
-.leaflet-control-zoom a:hover { background: var(--bg-surface) !important; }
+.leaflet-control-zoom a:hover { background: var(--bg-overlay) !important; }
 .leaflet-popup-content-wrapper {
   background: var(--bg-raised);
   border: 1px solid var(--border-mid);
@@ -170,84 +380,10 @@ body {
 }
 .leaflet-popup-tip { background: var(--bg-raised); }
 
-/* ── Risk badge ───────────────────────────────────────────── */
-.risk-badge-none     { color: var(--risk-none);     background: var(--risk-none-bg);     border: 1px solid var(--risk-none-border); }
-.risk-badge-moderate { color: var(--risk-moderate); background: var(--risk-moderate-bg); border: 1px solid var(--risk-moderate-border); }
-.risk-badge-heavy    { color: var(--risk-heavy);    background: var(--risk-heavy-bg);    border: 1px solid var(--risk-heavy-border); }
-.risk-badge-impact   { color: var(--risk-impact);   background: var(--risk-impact-bg);   border: 1px solid var(--risk-impact-border); }
+/* ════════════════════════════════════════════════════════════
+   GRAD-CAM COLOR SCALE
+   ════════════════════════════════════════════════════════════ */
 
-/* ── Animations ───────────────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-/* Subtle ring pulse for map markers — opacity only, no glow */
-@keyframes pulse-ring {
-  0%, 100% { opacity: 0.18; }
-  50%       { opacity: 0.38; }
-}
-
-.animate-fade-in   { animation: fadeUp 0.3s ease both; }
-.animate-spin-slow { animation: spin 1.2s linear infinite; }
-.animate-pulse-ring { animation: pulse-ring 2.6s ease-in-out infinite; }
-
-/* ── Skeleton ─────────────────────────────────────────────── */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-raised) 25%,
-    rgba(255,255,255,0.04) 50%,
-    var(--bg-raised) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
-  border-radius: 2px;
-}
-
-/* ── Evidence viewer tabs ─────────────────────────────────── */
-/* Tabs use uppercase label style; active state uses a top accent
-   border (newspaper-tab convention, not bottom-underline). */
-.ev-tab {
-  padding: 7px 14px 6px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  border-top: 2px solid transparent;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-}
-.ev-tab:hover { color: var(--text-secondary); }
-.ev-tab.active {
-  color: var(--text-primary);
-  border-top-color: var(--accent);
-  background: rgba(112,144,176,0.05);
-}
-
-/* ── Data table ───────────────────────────────────────────── */
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th,
-.data-table td { padding: 9px 14px; text-align: left; }
-.data-table thead tr { border-bottom: 1px solid var(--border-mid); }
-.data-table tbody tr { border-bottom: 1px solid var(--border); }
-.data-table tbody tr:last-child { border-bottom: none; }
-.data-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-muted); text-transform: uppercase; }
-.data-table td { font-size: 13px; color: var(--text-secondary); }
-
-/* ── Grad-CAM colour scale ────────────────────────────────── */
-/* Thermal ramp matching the matplotlib 'jet' / 'inferno' convention.
-   Cold (blue) → warm (red) maps to low → high model attention. */
 .gradcam-scale {
   height: 6px;
   border-radius: 0;
@@ -261,4 +397,107 @@ body {
     #f97316,   /* hot            — orange     */
     #dc2626    /* peak attention — red        */
   );
+}
+
+/* ════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ════════════════════════════════════════════════════════════ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.35; }
+}
+
+.animate-fade-in    { animation: fadeUp 0.25s ease both; }
+.animate-spin-slow  { animation: spin 1.2s linear infinite; }
+.animate-pulse-ring { animation: pulse-ring 2.6s ease-in-out infinite; }
+
+/* ── Skeleton ──────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-raised) 25%,
+    rgba(255,255,255,0.035) 50%,
+    var(--bg-raised) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  border-radius: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   BUTTONS
+   ════════════════════════════════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-mid);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--t-base), color var(--t-base), background var(--t-base);
+  border-radius: 2px;
+}
+.btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: rgba(107,143,175,0.10);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+.btn-primary:hover:not(:disabled) {
+  background: rgba(107,143,175,0.16);
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  :root { --sidebar-w: 200px; }
+}
+
+@media (max-width: 768px) {
+  .app-content { margin-left: 0; }
+  .sidebar {
+    position: static;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;
+    height: auto;
+  }
+  .sidebar-brand { border-bottom: none; border-right: 1px solid var(--border); padding: var(--sp-3) var(--sp-4); }
+  .sidebar-nav { display: flex; flex-direction: row; padding: 0; }
+  .nav-item { padding: var(--sp-3) var(--sp-3); border-left: none; border-bottom: 2px solid transparent; }
+  .nav-item.active { border-left-color: transparent; border-bottom-color: var(--nav-active-border); }
+  .sidebar-footer { display: none; }
 }
