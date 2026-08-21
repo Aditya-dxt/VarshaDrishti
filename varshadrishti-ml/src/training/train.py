@@ -197,7 +197,7 @@ class Trainer:
                         config=self.config,
                         save_path=self.checkpoint_path,
                     )
-                    logger.info(f"  → Checkpoint saved (val_loss={best_val_loss:.4f})")
+                    logger.info(f"  Checkpoint saved (val_loss={best_val_loss:.4f})")
 
             # Early stopping
             if self.early_stopper and self.early_stopper.update(val_metrics["loss"]):

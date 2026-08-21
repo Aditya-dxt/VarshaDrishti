@@ -1,0 +1,68 @@
+==================================================
+DEVELOPMENT / PROOF-OF-CONCEPT TRAINING ONLY
+==================================================
+
+Only two independent weather events were available.
+17 Aug 2026 was used for training.
+18 Aug 2026 was used as the held-out validation/test event.
+Validation and test are the same held-out event because only two independent events are currently available.
+The results must NOT be interpreted as scientifically generalizable model performance.
+
+Device: cpu
+Seed: 42
+Model: VarshaDrishti3DCNN  in_channels=3  num_classes=4
+Optimizer: AdamW  lr=0.001  weight_decay=0.0001
+Batch size: 4
+Max epochs: 3
+Early stopping patience: 2
+Gradient clipping: False
+Loss: CrossEntropyLoss with inverse-frequency class weights from TRAIN event only
+
+Split
+-----
+Train event: 17 Aug 2026 (temporal_sequence_id=0)  samples=69
+Val/test event: 18 Aug 2026 (temporal_sequence_id=1)  samples=69
+Train temporal_sequence_id set: [0]
+Val temporal_sequence_id set: [1]
+Event id overlap: []
+
+Class distribution (train): {0: 26, 1: 22, 2: 4, 3: 17}
+Class distribution (val):   {0: 28, 1: 14, 2: 12, 3: 15}
+Class weights (train-only): {'no_rain': 0.6634615384615384, 'moderate': 0.7840909090909091, 'heavy': 4.3125, 'high_impact': 1.0147058823529411}
+Class names: ['no_rain', 'moderate', 'heavy', 'high_impact']
+Label rule (unchanged): patch-level max rainfall at final timestamp;
+  0: max<=0, 1: 0<max<=5, 2: 5<max<=20, 3: max>20 mm/hr.
+  preprocessing.yaml keys 'light' (1.0) and 'high_impact' (50.0) are not class cuts.
+
+Epoch-wise losses
+-----------------
+  epoch 1: train_loss=1.324545  val_loss=1.593416  train_acc=0.3478  val_acc=0.4783
+  epoch 2: train_loss=1.240931  val_loss=1.275019  train_acc=0.4638  val_acc=0.5797
+  epoch 3: train_loss=1.085701  val_loss=1.271820  train_acc=0.5652  val_acc=0.6087
+
+Best epoch (lowest val_loss): 3
+Best val_loss: 1.271820
+Checkpoint path: C:\Users\adity\OneDrive\Desktop\VarshaDrishti\varshadrishti-ml\models\checkpoints\dev_poc_best.pth
+
+Held-out event metrics (18 Aug 2026) — NOT generalizable performance
+-------------------------------------------------------------------
+accuracy:    0.608696
+macro_f1:    0.402050
+weighted_f1: 0.488262
+
+Per-class precision / recall / F1
+  no_rain       P=0.642857  R=0.964286  F1=0.771429
+  moderate      P=0.000000  R=0.000000  F1=0.000000
+  heavy         P=1.000000  R=0.083333  F1=0.153846
+  high_impact   P=0.538462  R=0.933333  F1=0.682927
+
+Confusion matrix (rows = true, columns = predicted)
+pred->               no_rain      moderate         heavy   high_impact
+true no_rain             27             0             0             1
+true moderate             9             0             0             5
+true heavy                5             0             1             6
+true high_impact           1             0             0            14
+
+DEVELOPMENT / PROOF-OF-CONCEPT TRAINING ONLY
+Only two independent weather events were available.
+Results must NOT be interpreted as scientifically generalizable model performance.
