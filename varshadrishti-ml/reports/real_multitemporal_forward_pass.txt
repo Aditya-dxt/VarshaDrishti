@@ -1,0 +1,80 @@
+==================================================
+REAL MULTITEMPORAL 3D-CNN FORWARD-PASS VALIDATION
+==================================================
+
+NO MODEL TRAINING WAS PERFORMED.
+No optimizer was created. No loss.backward(). No weight updates.
+No epochs. No training accuracy. No checkpoints were written.
+
+SCIENTIFIC SAFETY
+-----------------
+This uses ONE independent temporal event (6 frames = 3 hours).
+The 69 patches are spatial tiles of that single event.
+Predicted class counts are from an UNTRAINED model and are NOT accuracy.
+This artifact is NOT scientifically valid for model training.
+
+Final status: PASS
+
+Device: cpu
+Dataset location: C:\Users\adity\OneDrive\Desktop\VarshaDrishti\varshadrishti-ml\data\processed\multitemporal_dev
+Number of samples: 69
+Input shape: [69, 3, 6, 256, 256]
+Target shape: [69, 256, 256]
+Number of classes: 4
+Number of batches tested: 18
+Model output shape: [4, 4]
+Logit min/max: -0.018919646739959717 / 0.17193832993507385
+Probability min/max: 0.2308332324028015 / 0.2811780571937561
+Probability sum range: 0.9999998807907104 / 1.0000001192092896
+
+NaN counts
+  input tensors: 0
+  logits: 0
+  probabilities: 0
+
+Inf counts
+  input tensors: 0
+  logits: 0
+  probabilities: 0
+
+Predicted class distribution (untrained model): {0: 69}
+Weights unchanged after forward pass: True
+Training performed: False
+
+Checks
+------
+  [x] DataLoader produces [B, 3, 6, 256, 256]
+  [x] Tensor dtype is floating-point
+  [x] Input contains no NaN
+  [x] Input contains no Inf
+  [x] Model forward pass succeeds
+  [x] Output shape is [B, 4]
+  [x] Logits contain no NaN
+  [x] Logits contain no Inf
+  [x] Softmax probabilities contain no NaN
+  [x] Softmax probabilities contain no Inf
+  [x] Probability sums are approximately 1
+  [x] Predicted classes are in [0, num_classes)
+  [x] Multiple batches tested
+  [x] Model weights were not updated
+  [x] No training performed
+
+Diagnostics
+-----------
+  SCIENTIFIC SAFETY: this artifact is a single temporal event.
+  69 spatial patches are NOT 69 independent weather events.
+  Forward-pass only. Do not interpret class counts as accuracy.
+  Model: VarshaDrishti3DCNN
+  Input contract: [B, C, T, H, W]
+  Output contract: [B, 4]
+  Parameters: 280260
+  First batch input: (4, 3, 6, 256, 256)
+  First batch output: (4, 4)
+
+Device info
+-----------
+  cuda_available: False
+  device_name: CPU
+
+NO MODEL TRAINING WAS PERFORMED.
+Final status: PASS
