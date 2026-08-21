@@ -176,6 +176,21 @@ class TestSequenceBuilder(unittest.TestCase):
         for seq in seqs:
             self.assertEqual(len(seq), 6)
 
+    def test_two_independent_six_frame_runs_are_not_concatenated(self):
+        day1 = _sequence_of(6)
+        t1 = day1[-1]["timestamp"] + timedelta(days=1)
+        l1bs = [_make_l1b(t1 + timedelta(minutes=i * 30)) for i in range(6)]
+        l2bs = [_make_l2b(t1 + timedelta(minutes=i * 30)) for i in range(6)]
+        day2, _, _ = match_temporally(l1bs, l2bs, tolerance_minutes=0)
+        matched = day1 + day2
+        seqs = build_temporal_sequences(matched, sequence_length=6, step_minutes=30)
+        self.assertEqual(len(matched), 12)
+        self.assertEqual(len(seqs), 2)
+        for seq in seqs:
+            self.assertEqual(len(seq), 6)
+        gap_min = (day2[0]["timestamp"] - day1[-1]["timestamp"]).total_seconds() / 60.0
+        self.assertGreater(gap_min, 30.01)
+
     def test_no_repeated_timestamps_within_sequence(self):
         matched = _sequence_of(6)
         seqs = build_temporal_sequences(matched, sequence_length=6, step_minutes=30)

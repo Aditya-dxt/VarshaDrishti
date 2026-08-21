@@ -8,8 +8,8 @@ No epochs. No training accuracy. No checkpoints were written.
 
 SCIENTIFIC SAFETY
 -----------------
-This uses ONE independent temporal event (6 frames = 3 hours).
-The 69 patches are spatial tiles of that single event.
+Independent temporal events are stacked along the sample axis only; T remains 6.
+Spatial patches of one event are NOT independent weather events.
 Predicted class counts are from an UNTRAINED model and are NOT accuracy.
 This artifact is NOT scientifically valid for model training.
 
@@ -17,14 +17,14 @@ Final status: PASS
 
 Device: cpu
 Dataset location: C:\Users\adity\OneDrive\Desktop\VarshaDrishti\varshadrishti-ml\data\processed\multitemporal_dev
-Number of samples: 69
-Input shape: [69, 3, 6, 256, 256]
-Target shape: [69, 256, 256]
+Number of samples: 138
+Input shape: [138, 3, 6, 256, 256]
+Target shape: [138, 256, 256]
 Number of classes: 4
-Number of batches tested: 18
+Number of batches tested: 35
 Model output shape: [4, 4]
-Logit min/max: -0.018919646739959717 / 0.17193832993507385
-Probability min/max: 0.2308332324028015 / 0.2811780571937561
+Logit min/max: -0.04607116058468819 / 0.07380063086748123
+Probability min/max: 0.23709623515605927 / 0.2649499475955963
 Probability sum range: 0.9999998807907104 / 1.0000001192092896
 
 NaN counts
@@ -37,7 +37,7 @@ Inf counts
   logits: 0
   probabilities: 0
 
-Predicted class distribution (untrained model): {0: 69}
+Predicted class distribution (untrained model): {3: 138}
 Weights unchanged after forward pass: True
 Training performed: False
 
@@ -61,8 +61,8 @@ Checks
 
 Diagnostics
 -----------
-  SCIENTIFIC SAFETY: this artifact is a single temporal event.
-  69 spatial patches are NOT 69 independent weather events.
+  SCIENTIFIC SAFETY: independent events are stacked on the sample axis only.
+  Spatial patches of one event are NOT independent weather events.
   Forward-pass only. Do not interpret class counts as accuracy.
   Model: VarshaDrishti3DCNN
   Input contract: [B, C, T, H, W]

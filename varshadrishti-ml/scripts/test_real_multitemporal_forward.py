@@ -139,8 +139,8 @@ def run_forward_pass(
     failures: List[str] = []
     diagnostics: List[str] = []
 
-    diagnostics.append("SCIENTIFIC SAFETY: this artifact is a single temporal event.")
-    diagnostics.append("69 spatial patches are NOT 69 independent weather events.")
+    diagnostics.append("SCIENTIFIC SAFETY: independent events are stacked on the sample axis only.")
+    diagnostics.append("Spatial patches of one event are NOT independent weather events.")
     diagnostics.append("Forward-pass only. Do not interpret class counts as accuracy.")
 
     if sequences.ndim != 5:
@@ -337,8 +337,8 @@ def format_report(result: ForwardPassResult) -> str:
         "",
         "SCIENTIFIC SAFETY",
         "-----------------",
-        "This uses ONE independent temporal event (6 frames = 3 hours).",
-        "The 69 patches are spatial tiles of that single event.",
+        "Independent temporal events are stacked along the sample axis only; T remains 6.",
+        "Spatial patches of one event are NOT independent weather events.",
         "Predicted class counts are from an UNTRAINED model and are NOT accuracy.",
         "This artifact is NOT scientifically valid for model training.",
         "",

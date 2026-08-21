@@ -221,8 +221,11 @@ if __name__ == "__main__":
                 out_dir = BASE_DIR / "data" / "processed" / "multitemporal_dev"
                 meta = materialize_multitemporal(matched_pairs, config, out_dir)
                 print(f"\nArtifact written to: {out_dir}")
+                print(f"Temporal sequences : {meta.get('number_of_temporal_sequences')}")
+                print(f"Sequence length T  : {meta.get('sequence_length')}")
                 print(f"Sequences shape   : {meta['input_shape']}")
-                print(f"Patches           : {meta['number_of_spatial_patches']}")
+                print(f"Samples           : {meta.get('number_of_samples', meta['number_of_spatial_patches'])}")
+                print(f"Patches per event : {meta.get('patches_per_temporal_sequence')}")
                 report_filename = "multitemporal_preprocessing_report.txt"
         except Exception as e:
             print(f"FAILED: {e}")

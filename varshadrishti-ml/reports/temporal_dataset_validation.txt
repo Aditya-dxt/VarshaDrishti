@@ -1,12 +1,12 @@
 ==================================================
 TEMPORAL DATASET VALIDATION
 ==================================================
-L1B observations: 6
-L2B observations: 6
-Matched observations: 6
+L1B observations: 12
+L2B observations: 12
+Matched observations: 12
 Unmatched L1B files: 0
 Unmatched L2B files: 0
-Timestamp gaps (broken continuity): 0
+Timestamp gaps (broken continuity): 1
 Longest continuous sequence (frames): 6
-6-frame sequences: 1
+6-frame sequences: 2
 Training ready: TRUE

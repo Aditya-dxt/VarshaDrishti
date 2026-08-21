@@ -22,6 +22,7 @@ from torch.utils.data import DataLoader
 from src.data.dataset import VarshaDataset
 from src.data.sequence_builder import build_temporal_sequences
 from src.data.temporal_matcher import match_temporally
+from src.data.multitemporal_processor import resolve_temporal_sequences
 
 # ── Fixture helpers ──────────────────────────────────────────────────────────
 
@@ -124,9 +125,40 @@ class TestMultiTemporalArtifact(unittest.TestCase):
 
     def test_metadata_timestamps_count(self):
         self._skip_if_absent()
+        seq = np.load(ARTIFACT_DIR / "data" / "sequences.npy")
         with open(ARTIFACT_DIR / "metadata" / "metadata.json") as f:
             meta = json.load(f)
-        self.assertEqual(len(meta["source_timestamps"]), 6)
+        self.assertEqual(seq.shape[2], 6, "T must remain 6; events must not be concatenated in time")
+        self.assertEqual(meta["sequence_length"], 6)
+        self.assertNotEqual(seq.shape[2], 12)
+        sequences_meta = meta.get("temporal_sequences", [])
+        self.assertGreaterEqual(len(sequences_meta), 1)
+        for item in sequences_meta:
+            self.assertEqual(len(item["timestamps"]), 6)
+
+    def test_two_events_are_not_stacked_on_time_axis(self):
+        self._skip_if_absent()
+        seq = np.load(ARTIFACT_DIR / "data" / "sequences.npy")
+        with open(ARTIFACT_DIR / "metadata" / "metadata.json") as f:
+            meta = json.load(f)
+        n_events = meta.get("number_of_temporal_sequences", meta.get("number_of_sequences"))
+        if n_events < 2:
+            self.skipTest("Artifact currently contains fewer than 2 independent temporal events.")
+        self.assertEqual(seq.shape[2], 6)
+        self.assertEqual(seq.ndim, 5)
+        self.assertEqual(
+            seq.shape[0],
+            sum(meta["patches_per_temporal_sequence"]),
+        )
+        # Sample axis grows; time axis stays T=6.
+        self.assertGreater(seq.shape[0], 69)
+        groups = meta["temporal_sequences"]
+        self.assertEqual(len(groups), n_events)
+        ts0 = groups[0]["timestamps"]
+        ts1 = groups[1]["timestamps"]
+        self.assertEqual(len(ts0), 6)
+        self.assertEqual(len(ts1), 6)
+        self.assertTrue(max(ts0) < min(ts1), "Events must remain chronological and unmerged")
 
     def test_metadata_patch_count_matches_array(self):
         self._skip_if_absent()
@@ -208,6 +240,27 @@ class TestSequenceLogic(unittest.TestCase):
         for seq in seqs:
             ts = [f["timestamp"] for f in seq]
             self.assertEqual(len(set(ts)), len(ts))
+
+    def test_two_six_frame_events_separated_by_gap_are_not_one_twelve_frame_sequence(self):
+        """Aug 17 6-frame run + Aug 18 6-frame run must stay two T=6 events."""
+        day1 = [_make_pair(T0 + timedelta(minutes=i * 30)) for i in range(6)]
+        day2_start = T0 + timedelta(days=1)
+        day2 = [_make_pair(day2_start + timedelta(minutes=i * 30)) for i in range(6)]
+        pairs = day1 + day2
+        seqs = build_temporal_sequences(pairs, sequence_length=6, step_minutes=30)
+        self.assertEqual(len(pairs), 12)
+        self.assertEqual(len(seqs), 2)
+        self.assertTrue(all(len(s) == 6 for s in seqs))
+
+        resolved, seq_len, _ = resolve_temporal_sequences(
+            pairs,
+            {"sequencing": {"sequence_length": 6, "temporal_step_minutes": 30}},
+        )
+        self.assertEqual(seq_len, 6)
+        self.assertEqual(len(resolved), 2)
+        self.assertNotEqual(len(pairs), seq_len)
+        self.assertEqual([f["timestamp"] for f in resolved[0]], [f["timestamp"] for f in day1])
+        self.assertEqual([f["timestamp"] for f in resolved[1]], [f["timestamp"] for f in day2])
 
 
 if __name__ == "__main__":
