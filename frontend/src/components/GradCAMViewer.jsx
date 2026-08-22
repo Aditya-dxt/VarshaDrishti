@@ -19,12 +19,14 @@ const CAPTIONS = {
 };
 
 export default function GradCAMViewer({ gradcam, loading }) {
-  const [mode, setMode]       = useState('overlay');
+  const [mode, setMode]       = useState('heatmap');
   const [imgError, setImgError] = useState(false);
 
   if (loading) return <LoadingState label="Generating explanation…" lines={4} />;
 
-  if (!gradcam?.available) {
+  const normalizedGradcam = gradcam?.image_url ? { available: true, heatmap_url: gradcam.image_url } : gradcam;
+
+  if (!normalizedGradcam?.available) {
     return (
       <EmptyState
         title="Explanation unavailable"
@@ -34,7 +36,7 @@ export default function GradCAMViewer({ gradcam, loading }) {
   }
 
   const currentMode = MODES.find((m) => m.id === mode);
-  const imgUrl = gradcam[currentMode.key];
+  const imgUrl = normalizedGradcam[currentMode.key];
 
   return (
     <div className="animate-fade-in">

@@ -5,12 +5,13 @@
  * ┌──────────────────┬─────────────────────────────────────┐
  * │ EVENT LIST       │ EVENT DETAIL                        │
  * │                  │                                     │
- * │ ● Bihar Flood    │   Risk / Map / Evidence / Explain   │
- * │   Monsoon Mumbai │                                     │
- * │   Cyclone …      │   or: empty state                  │
+ * │ ● Dev Event      │   Risk / Map / Evidence / Explain   │
+ * │   17 Aug 2026    │                                     │
+ * │   18 Aug 2026    │   or: empty state                   │
  * └──────────────────┴─────────────────────────────────────┘
  *
  * Clicking an event highlights it and triggers replay automatically.
+ * Geographic coordinates are unavailable in the source dataset.
  */
 import { useState } from 'react';
 import { Play, MapPin, Calendar, Activity } from 'lucide-react';
@@ -47,12 +48,9 @@ function EventRow({ event, selected, onSelect }) {
         textAlign: 'left',
         padding: '14px 16px',
         background: selected ? 'var(--nav-active-bg)' : 'transparent',
-        borderLeft: `2px solid ${selected ? meta.dotColor : 'transparent'}`,
+        boxShadow: selected ? `inset 2px 0 0 ${meta.dotColor}` : 'none',
         border: 'none',
         borderBottom: '1px solid var(--border)',
-        borderLeftWidth: '2px',
-        borderLeftStyle: 'solid',
-        borderLeftColor: selected ? meta.dotColor : 'transparent',
         cursor: 'pointer',
         transition: 'background 0.15s, border-color 0.15s',
       }}
@@ -108,7 +106,7 @@ function EventRow({ event, selected, onSelect }) {
           <Calendar size={10} />
           {event.date}
         </span>
-        {event.location && (
+        {event.location ? (
           <span
             style={{
               display: 'flex',
@@ -119,7 +117,20 @@ function EventRow({ event, selected, onSelect }) {
             }}
           >
             <MapPin size={10} />
-            {event.location.split(',')[0]}
+            {event.location}
+          </span>
+        ) : (
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+            }}
+          >
+            <MapPin size={10} />
+            Coordinates unavailable
           </span>
         )}
       </div>
@@ -220,7 +231,7 @@ function DetailPanel({ event, result, loading, error, onReplay, replayLoading })
           style={{
             padding: '24px 28px',
             borderBottom: '1px solid var(--border)',
-            borderLeft: `2px solid ${meta.dotColor}`,
+            boxShadow: `inset 2px 0 0 ${meta.dotColor}`,
           }}
         >
           <div style={{ marginBottom: '12px' }}>
@@ -235,7 +246,7 @@ function DetailPanel({ event, result, loading, error, onReplay, replayLoading })
               }}
             >
               <Calendar size={11} /> {event.date}
-              {event.location && <>&nbsp;&nbsp;<MapPin size={11} /> {event.location}</>}
+              &nbsp;&nbsp;<MapPin size={11} /> {event.location || 'Coordinates unavailable'}
             </span>
             <h2
               style={{
@@ -385,8 +396,8 @@ export default function Historical() {
         page="Historical Events"
         sub={
           eventCount != null
-            ? `${eventCount} documented extreme-rainfall event${eventCount !== 1 ? 's' : ''}`
-            : 'Historical prediction replay'
+            ? `${eventCount} development dataset event${eventCount !== 1 ? 's' : ''} — Geographic coordinates unavailable in source dataset`
+            : 'Development dataset events — prediction replay'
         }
       />
 

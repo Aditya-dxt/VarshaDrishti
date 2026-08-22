@@ -77,17 +77,6 @@ export const getSatelliteImage = async () => {
   } catch (err) { normalise(err); }
 };
 
-/**
- * Fetch Grad-CAM visualisation for the latest prediction.
- * FastAPI route: GET /api/gradcam/latest
- */
-export const getGradCAM = async () => {
-  if (USE_MOCK) return mock.mockGradCAM();
-  try {
-    const { data } = await http.get('/gradcam/latest');
-    return data;
-  } catch (err) { normalise(err); }
-};
 
 /**
  * Fetch model evaluation metrics.

@@ -198,6 +198,10 @@ export default function Metrics() {
         sub={subText}
       />
 
+      <div style={{ padding: '12px 28px', background: '#FEF3C7', color: '#92400E', fontSize: '13px', borderBottom: '1px solid #FCD34D' }}>
+        <strong>DEVELOPMENT / PROOF-OF-CONCEPT TRAINING ONLY:</strong> Only two independent weather events were available for this evaluation. Results must NOT be interpreted as scientifically generalizable model performance.
+      </div>
+
       {loading && (
         <div style={{ padding: '40px 28px' }}>
           <LoadingState label="Loading model performance…" lines={8} />
@@ -209,7 +213,7 @@ export default function Metrics() {
         </div>
       )}
 
-      {!loading && !error && !data?.available && (
+      {!loading && !error && !data && (
         <div style={{ padding: '40px 28px' }}>
           <EmptyState
             title="Metrics unavailable"
@@ -218,7 +222,7 @@ export default function Metrics() {
         </div>
       )}
 
-      {data?.available && (
+      {!!data && (
         <div className="animate-fade-in">
 
           {/* ── Overall metrics strip ─── */}

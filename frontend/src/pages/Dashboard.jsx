@@ -19,10 +19,8 @@
  *
  * API + hook contracts: unchanged.
  */
-import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { useLatestPrediction }  from '../hooks/useLatestPrediction.js';
-import { getGradCAM }           from '../services/api.js';
 
 import PageHeader       from '../components/PageHeader.jsx';
 import RiskCard         from '../components/RiskCard.jsx';
@@ -134,16 +132,6 @@ function NoDataState({ onAnalyze, loading }) {
 export default function Dashboard() {
   const { data, loading, error, refetch } = useLatestPrediction();
 
-  const [gradcamData, setGradcamData] = useState(null);
-  const [gcLoading,   setGcLoading]   = useState(true);
-
-  useEffect(() => {
-    getGradCAM()
-      .then(setGradcamData)
-      .catch(() => setGradcamData({ available: false }))
-      .finally(() => setGcLoading(false));
-  }, []);
-
   /* ── Loading ── */
   if (loading && !data) {
     return (
@@ -190,7 +178,6 @@ export default function Dashboard() {
   }
 
   const { prediction, probabilities, xai, metadata, system } = data;
-  const evidenceData = gradcamData || xai?.gradcam;
 
   /* ── Refresh button (used in page header) ── */
   const RefreshBtn = (
@@ -291,12 +278,12 @@ export default function Dashboard() {
           <span className="label">Model Evidence</span>
         </div>
         <EvidenceViewer
-          gradcam={evidenceData}
+          gradcam={xai?.gradcam}
           metadata={{
             timestamp:     metadata?.timestamp,
             channel_label: metadata?.source,
           }}
-          loading={gcLoading}
+          loading={false}
         />
       </div>
 

@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.routes import historical, metrics, predictions
@@ -31,3 +34,8 @@ def health() -> HealthResponse:
 app.include_router(predictions.router, prefix="/api")
 app.include_router(metrics.router, prefix="/api")
 app.include_router(historical.router, prefix="/api")
+
+# Serve generated XAI assets (Grad-CAM heatmaps, etc.) at /generated/...
+_GENERATED_DIR = Path(__file__).resolve().parent.parent / "generated"
+_GENERATED_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/generated", StaticFiles(directory=str(_GENERATED_DIR)), name="generated")

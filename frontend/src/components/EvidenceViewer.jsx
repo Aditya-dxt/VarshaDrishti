@@ -2,6 +2,12 @@
  * EvidenceViewer.jsx — Light theme
  * Unified satellite evidence panel with tabs: Satellite | Grad-CAM | Overlay
  * Clean white surface, dark tab labels, blue active state.
+ *
+ * Real backend contract (as of Grad-CAM integration):
+ *   gradcam.image_url  — the computed Grad-CAM heatmap PNG URL
+ *
+ * gradcam.original_url and gradcam.overlay_url are not yet supplied by the
+ * backend. Those tabs remain visible but show "No image available" gracefully.
  */
 import { useState } from 'react';
 import LoadingState from './LoadingState.jsx';
@@ -11,7 +17,8 @@ const MODES = [
   {
     id:    'original',
     label: 'Raw Satellite',
-    key:   'original_url',
+    // Not yet supplied by the backend — will render "No image available"
+    getUrl: () => null,
     desc:  'Original INSAT-3DR observation as ingested by the 3D-CNN — no post-processing.',
     note:  null,
     showScale: false,
@@ -19,7 +26,8 @@ const MODES = [
   {
     id:    'heatmap',
     label: 'Grad-CAM',
-    key:   'heatmap_url',
+    // Real backend provides image_url on the gradcam object
+    getUrl: (gradcam) => gradcam?.image_url ?? null,
     desc:  'Class activation map (Grad-CAM). Spatial regions weighted by gradient contribution to final classification.',
     note:  'Warmer colour = stronger model attention.',
     showScale: true,
@@ -27,7 +35,8 @@ const MODES = [
   {
     id:    'overlay',
     label: 'Overlay',
-    key:   'overlay_url',
+    // Not yet supplied by the backend — will render "No image available"
+    getUrl: () => null,
     desc:  'Grad-CAM attention superimposed on original satellite observation (α = 0.55).',
     note:  'Warmer colour = stronger model attention.',
     showScale: true,
@@ -67,7 +76,8 @@ function GradCAMScale() {
 }
 
 export default function EvidenceViewer({ gradcam, metadata, loading }) {
-  const [mode, setMode]         = useState('overlay');
+  // Default to 'heatmap' since that is the only tab currently backed by real data
+  const [mode, setMode]         = useState('heatmap');
   const [imgError, setImgError] = useState(false);
   const [imgVisible, setImgVisible] = useState(true);
 
@@ -79,7 +89,9 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
     );
   }
 
-  if (!gradcam?.available) {
+  // Show empty state only when there is genuinely no Grad-CAM data at all.
+  // We check for image_url (real API contract) rather than the old mock `available` flag.
+  if (!gradcam?.image_url) {
     return (
       <EmptyState
         title="Satellite evidence unavailable"
@@ -89,7 +101,8 @@ export default function EvidenceViewer({ gradcam, metadata, loading }) {
   }
 
   const currentMode = MODES.find((m) => m.id === mode);
-  const imgUrl = gradcam[currentMode.key];
+  const imgUrl = currentMode.getUrl(gradcam);
+
 
   const handleTabChange = (id) => {
     setImgVisible(false);

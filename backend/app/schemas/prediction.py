@@ -62,8 +62,8 @@ class XAI(BaseModel):
 
 class PredictionMetadata(BaseModel):
     timestamp: datetime
-    latitude: float = Field(ge=-90, le=90)
-    longitude: float = Field(ge=-180, le=180)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
 
     @field_validator("timestamp")
     @classmethod

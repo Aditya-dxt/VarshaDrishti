@@ -7,7 +7,9 @@ import Metrics    from './pages/Metrics.jsx';
 
 function AppShell() {
   const { data } = useLatestPrediction();
-  const systemStatus = data?.system?.model_status ?? 'waiting';
+  // data.system is a mock-era field not present in the real PredictionResponse schema.
+  // Derive status from what the real API actually provides: a loaded prediction means ready.
+  const systemStatus = data?.prediction ? 'ready' : 'waiting';
 
   return (
     <div className="app-shell">

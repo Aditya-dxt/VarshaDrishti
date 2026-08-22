@@ -11,15 +11,15 @@ class ClassMetrics(BaseModel):
     precision: float = Field(ge=0, le=1)
     recall: float = Field(ge=0, le=1)
     f1: float = Field(ge=0, le=1)
-    support: int = Field(ge=0)
+    support: int | None = None
 
 
 class OverallMetrics(BaseModel):
     accuracy: float = Field(ge=0, le=1)
-    precision: float = Field(ge=0, le=1)
-    recall: float = Field(ge=0, le=1)
-    f1: float = Field(ge=0, le=1)
-    roc_auc: float = Field(ge=0, le=1)
+    precision: float | None = None
+    recall: float | None = None
+    f1: float | None = None
+    roc_auc: float | None = None
 
 
 class ConfusionMatrix(BaseModel):

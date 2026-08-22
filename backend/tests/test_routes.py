@@ -5,6 +5,7 @@ from app.dependencies import get_metrics_service, get_prediction_service
 from app.main import app
 from app.schemas.prediction import PredictionResponse
 from app.services.metrics_service import MetricsService
+from app.services.errors import ModelUnavailable
 from app.services.prediction_service import PredictionService
 
 
@@ -31,7 +32,16 @@ def test_predict_route_uses_injected_service() -> None:
 
 
 def test_unconfigured_model_returns_503() -> None:
-    response = TestClient(app).get("/api/latest")
+    class UnavailablePredictionService:
+        def latest(self):
+            raise ModelUnavailable("No predictor is configured.")
+
+    app.dependency_overrides[get_prediction_service] = lambda: UnavailablePredictionService()
+    try:
+        response = TestClient(app).get("/api/latest")
+    finally:
+        app.dependency_overrides.clear()
+
     assert response.status_code == 503
     assert response.json()["code"] == "model_unavailable"
 
